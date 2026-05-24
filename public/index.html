@@ -1487,35 +1487,14 @@ async function search() {
   setProgress(10, "Searching TikTok...", 'Searching for "' + q + '"...');
 
   try {
-    // Fetch up to 3 pages automatically
-    for (var page = 0; page < 3; page++) {
-      var pct = 10 + (page * 25);
-      setProgress(pct, "Searching TikTok...", "Fetching page " + (page + 1) + "...");
+    setProgress(50, "Searching TikTok...", "Fetching results...");
 
-      var url = "/api/search?query=" + encodeURIComponent(q);
-      if (searchCursor) url += "&cursor=" + encodeURIComponent(searchCursor);
+    var r = await fetch("/api/search?query=" + encodeURIComponent(q));
+    if (!r.ok) throw new Error(await r.text());
+    var d = await r.json();
 
-      var r = await fetch(url);
-      if (!r.ok) throw new Error(await r.text());
-      var d = await r.json();
-
-      var newVideos = parse(d);
-      V = V.concat(newVideos);
-
-      // Get cursor for next page
-      searchCursor = d.cursor || d.next_cursor || null;
-      if (!searchCursor || newVideos.length === 0) break;
-    }
-
-    setProgress(95, "Searching TikTok...", "Processing videos...");
-
-    // Deduplicate by ID
-    var seen = {};
-    V = V.filter(function(v) {
-      if (seen[v.id]) return false;
-      seen[v.id] = true;
-      return true;
-    });
+    V = parse(d);
+    searchCursor = d.cursor || d.next_cursor || null;
 
     setProgress(100, "Complete!", V.length + " videos found");
 
