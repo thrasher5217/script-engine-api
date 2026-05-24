@@ -73,7 +73,7 @@ Lead with the human truth, the story, or the take. Bring the product in WHEN IT 
 ═══ THE OTHER FIELDS ═══
 - visual_hook: ONE concrete, filmable opening action (1-2s) before talking. "Holds a shredded receipt up to the camera, deadpan." NOT "looks at camera."
 - pattern interrupt: exactly ONE mid-script change of pace (hard cut, angle flip, sudden silence, holds up an object). Mark it with "⚡" in that SINGLE on_screen_text entry's "visual" field — nowhere else. Don't put visual cues on every timestamp.
-- on_screen_text: short overlays (5-12 words) the way creators actually caption — punchy, sometimes funny, NEVER a word-for-word restating of the dialogue. The text_hook is the most important element: the scroll-stopper in the first 1-3 seconds.
+- on_screen_text: VERY short overlays — aim for 3-6 words, HARD MAX 7 words. They must fit on a phone screen in one or two big lines and be readable in a glance. More words than that looks like garbage on screen. If a thought is longer, split it across two consecutive overlay beats instead of cramming it into one. Punchy, sometimes funny, NEVER a word-for-word restating of the dialogue. The text_hook is the most important element: the scroll-stopper in the first 1-3 seconds.
 - video_style: each script uses a DIFFERENT style from the provided list; adapt the format to the style.
 
 ═══ "Good / Better / Best" STYLE (only if that style is requested) ═══
@@ -81,7 +81,7 @@ Hook (specific, curiosity-driven, NOT a banned opener) → GOOD: a common option
 
 ═══ OUTPUT ═══
 Respond ONLY with valid JSON (no markdown, no backticks), exactly this shape:
-{"scripts":[{"title":"...","hook_type":"...","structure":"...","video_style":"...","visual_hook":"concrete filmable opening action, 1-2s before dialogue","text_hook":"the SHORT punchy on-screen scroll-stopper (5-12 words), specific enough it could only be about this","on_screen_text":[{"timestamp":"0-2s","text":"overlay text","visual":"what's on screen / only mark the ONE pattern interrupt with ⚡","purpose":"hook"},{"timestamp":"2-8s","text":"...","visual":"...","purpose":"..."}],"script":"full spoken script, written exactly as it's said out loud","direction":"filming/visual direction","estimated_length":"..."}]}`;
+{"scripts":[{"title":"...","hook_type":"...","structure":"...","video_style":"...","visual_hook":"concrete filmable opening action, 1-2s before dialogue","text_hook":"the SHORT punchy on-screen scroll-stopper — 3-6 words ideal, 7 words MAX, must fit a phone screen in a glance, specific enough it could only be about this","on_screen_text":[{"timestamp":"0-2s","text":"3-6 word overlay, 7 max","visual":"what's on screen / only mark the ONE pattern interrupt with ⚡","purpose":"hook"},{"timestamp":"2-8s","text":"...","visual":"...","purpose":"..."}],"script":"full spoken script, written exactly as it's said out loud","direction":"filming/visual direction","estimated_length":"..."}]}`;
 
 // ── HEALTH / ROOT ──
 app.get("/health", (req, res) => {
