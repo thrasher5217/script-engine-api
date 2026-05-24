@@ -688,6 +688,83 @@ a { color: #c8ff00; text-decoration: none; }
 }
 .btn-row { display: flex; gap: 10px; margin-top: 20px; }
 
+/* ── Text Hook Display ── */
+.text-hook-box {
+  background: linear-gradient(135deg, rgba(200,255,0,.08), rgba(200,255,0,.02));
+  border: 1px solid rgba(200,255,0,.2);
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+}
+.text-hook-label {
+  font-size: 9px;
+  font-family: 'IBM Plex Mono', monospace;
+  color: rgba(200,255,0,.6);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.text-hook-text {
+  font-size: 18px;
+  font-weight: 700;
+  color: #c8ff00;
+  line-height: 1.3;
+  letter-spacing: -0.3px;
+}
+
+/* ── On-Screen Text Timeline ── */
+.ost-box {
+  margin-top: 12px;
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.ost-header {
+  padding: 8px 12px;
+  background: rgba(255,255,255,.03);
+  font-size: 9px;
+  font-family: 'IBM Plex Mono', monospace;
+  color: rgba(255,255,255,.35);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  border-bottom: 1px solid rgba(255,255,255,.04);
+}
+.ost-item {
+  display: flex;
+  gap: 12px;
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(255,255,255,.03);
+  align-items: flex-start;
+}
+.ost-item:last-child { border-bottom: none; }
+.ost-time {
+  font-size: 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  color: #c8ff00;
+  font-weight: 700;
+  min-width: 45px;
+  padding-top: 1px;
+}
+.ost-text {
+  font-size: 12px;
+  color: rgba(255,255,255,.7);
+  font-weight: 600;
+  flex: 1;
+  line-height: 1.4;
+}
+.ost-purpose {
+  font-size: 9px;
+  font-family: 'IBM Plex Mono', monospace;
+  color: rgba(255,255,255,.2);
+  text-transform: uppercase;
+  min-width: 40px;
+  text-align: right;
+  padding-top: 2px;
+}
+
 /* ── Utility ── */
 .hidden { display: none; }
 
@@ -1392,6 +1469,30 @@ function renderScripts(d) {
     html += '<span class="bb">' + (s.structure || "") + '</span>';
     if (s.video_style) html += '<span class="bv">' + s.video_style + '</span>';
     html += '<span class="bg">' + (s.estimated_length || "") + '</span></div></div></div>';
+
+    // Text Hook (scroll-stopper)
+    if (s.text_hook) {
+      html += '<div class="text-hook-box">';
+      html += '<div class="text-hook-label">\uD83D\uDCF1 On-Screen Text Hook (scroll stopper)</div>';
+      html += '<div class="text-hook-text">' + s.text_hook + '</div>';
+      html += '</div>';
+    }
+
+    // On-Screen Text Timeline
+    if (s.on_screen_text && s.on_screen_text.length) {
+      html += '<div class="ost-box">';
+      html += '<div class="ost-header">\uD83D\uDCDD On-Screen Text Timeline</div>';
+      for (var j = 0; j < s.on_screen_text.length; j++) {
+        var ost = s.on_screen_text[j];
+        html += '<div class="ost-item">';
+        html += '<span class="ost-time">' + (ost.timestamp || "") + '</span>';
+        html += '<span class="ost-text">' + (ost.text || "") + '</span>';
+        html += '<span class="ost-purpose">' + (ost.purpose || "") + '</span>';
+        html += '</div>';
+      }
+      html += '</div>';
+    }
+
     html += '<div class="script-body">' + (s.script || "") + '</div>';
     html += '<div class="dir-box"><div class="dir-label">\uD83C\uDFAC Direction</div>';
     html += '<div class="dir-text">' + (s.direction || "") + '</div></div>';
@@ -1405,7 +1506,19 @@ function renderScripts(d) {
 // ── Copy Script ──
 window.copyScript = function(btn, i) {
   var s = window._sc[i];
-  var text = s.title + "\n\n" + s.script + "\n\nDirection: " + s.direction;
+  var text = s.title + "\n";
+  if (s.video_style) text += "Style: " + s.video_style + "\n";
+  text += "\n";
+  if (s.text_hook) text += "TEXT HOOK (on screen): " + s.text_hook + "\n\n";
+  if (s.on_screen_text && s.on_screen_text.length) {
+    text += "ON-SCREEN TEXT:\n";
+    for (var j = 0; j < s.on_screen_text.length; j++) {
+      var ost = s.on_screen_text[j];
+      text += "  [" + (ost.timestamp || "") + "] " + (ost.text || "") + " (" + (ost.purpose || "") + ")\n";
+    }
+    text += "\n";
+  }
+  text += "SCRIPT:\n" + s.script + "\n\nDIRECTION:\n" + s.direction;
   navigator.clipboard.writeText(text).then(function() {
     btn.textContent = "Copied \u2713";
     btn.classList.add("copied");

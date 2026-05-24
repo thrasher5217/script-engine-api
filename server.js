@@ -21,23 +21,34 @@ For each transcript, identify:
 4. CTA - call to action type and placement
 5. PACING - Fast/medium/slow, pattern breaks
 6. KEY PHRASES - engagement-driving phrases
-Then provide OVERALL PATTERN SUMMARY.
+7. TEXT HOOK PATTERNS - Identify the style of on-screen text that would appear: short punchy text overlays, clickbait-style captions, numbered lists, question hooks, bold claims. Describe the TEXT HOOK style (e.g. "POV: when you..." or "Nobody talks about this" or "3 things I wish I knew" or "Wait for it..." etc.)
+Then provide OVERALL PATTERN SUMMARY including common text hook styles.
 Respond ONLY in valid JSON (no markdown, no backticks):
-{"analyses":[{"transcript_number":1,"hook":{"text":"...","type":"..."},"structure":"...","emotional_arc":"...","cta":"...","pacing":"...","key_phrases":["..."]}],"pattern_summary":{"common_hooks":"...","dominant_structure":"...","emotional_patterns":"...","what_makes_them_viral":"..."}}`;
+{"analyses":[{"transcript_number":1,"hook":{"text":"...","type":"..."},"structure":"...","emotional_arc":"...","cta":"...","pacing":"...","key_phrases":["..."],"text_hook_style":"description of on-screen text pattern used"}],"pattern_summary":{"common_hooks":"...","dominant_structure":"...","emotional_patterns":"...","what_makes_them_viral":"...","common_text_hooks":"describe the recurring on-screen text patterns across all videos"}}`;
 
 const GENERATE_PROMPT = `You are an elite UGC scriptwriter for TikTok. Using viral patterns from reference videos, generate scripts for the given ICP.
-Each script must:
-- Open with a proven hook pattern
+
+CRITICAL REQUIREMENTS:
+- Each script MUST include specific ON-SCREEN TEXT for every section of the video
+- The TEXT HOOK (the on-screen text that appears in the first 1-3 seconds) is THE most important element — it's what stops the scroll
+- Text hooks should be SHORT (5-12 words max), PUNCHY, and create instant curiosity or urgency
+- Model text hooks after proven viral formats: "POV: ...", "Nobody told me...", "The [thing] that changed my [result]", "Stop scrolling if you...", "3 signs your...", "I tested [X] for [time]...", "This [product] is insane", "Wait till you see..."
+- Mirror the text hook STYLE from the reference videos provided in the analysis
+
+Each script must include:
+- Open with a proven hook pattern from the references
+- TEXT OVERLAYS: specify exact on-screen text for EACH section (opening hook text, key points, CTA text)
 - Follow a proven structure from the analysis
 - Match the emotional arc that drives engagement
 - Use language appropriate for the ICP
 - Include a natural CTA
 - Be 30-60 seconds spoken aloud
 - Feel authentic UGC, NOT scripted or salesy
-- IMPORTANT: Use the specified VIDEO STYLES. Each script should use a DIFFERENT video style from the provided list. Match the script format to the style (e.g. a "Screen Recording" script should describe what's on screen, a "POV" script should set the scene, a "GRWM" should be conversational while getting ready, a "Skit" should have character dialogue, etc.)
+- IMPORTANT: Use the specified VIDEO STYLES. Each script should use a DIFFERENT video style from the provided list. Match the script format to the style.
+
 Generate 5 unique scripts using DIFFERENT hook/structure/style combos.
 Respond ONLY in valid JSON (no markdown, no backticks):
-{"scripts":[{"title":"...","hook_type":"...","structure":"...","video_style":"...","script":"...","direction":"...","estimated_length":"..."}]}`;
+{"scripts":[{"title":"...","hook_type":"...","structure":"...","video_style":"...","text_hook":"the SHORT punchy on-screen text that appears first (5-12 words, this is the scroll-stopper)","on_screen_text":[{"timestamp":"0-3s","text":"the text overlay shown","purpose":"hook/point/cta"},{"timestamp":"3-10s","text":"...","purpose":"..."},{"timestamp":"...","text":"...","purpose":"..."}],"script":"full spoken script...","direction":"visual/filming direction...","estimated_length":"..."}]}`;
 
 // ── HEALTH / ROOT ──
 app.get("/health", (req, res) => {
