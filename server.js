@@ -13,7 +13,7 @@ const SUPADATA_KEY = process.env.SUPADATA_API_KEY;
 const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY;
 
 // ── PROMPTS ──
-const ANALYZE_PROMPT = `You are an expert TikTok content strategist. Analyze the following TikTok video transcripts and extract viral patterns.
+const ANALYZE_PROMPT = `You are an expert TikTok content strategist. Analyze the following TikTok video transcripts and extract what ACTUALLY makes them work — not generic categories.
 For each transcript, identify:
 1. HOOK - Opening line/first 3 seconds. Type: curiosity gap, bold claim, question, controversy, relatability, shock
 2. STRUCTURE - problem-agitate-solve, story arc, listicle, tutorial, rant, transformation, myth-busting
@@ -21,66 +21,67 @@ For each transcript, identify:
 4. CTA - call to action type and placement
 5. PACING - Fast/medium/slow, pattern breaks
 6. KEY PHRASES - engagement-driving phrases
-7. TEXT HOOK PATTERNS - Identify the style of on-screen text that would appear: short punchy text overlays, clickbait-style captions, numbered lists, question hooks, bold claims. Describe the TEXT HOOK style (e.g. "POV: when you..." or "Nobody talks about this" or "3 things I wish I knew" or "Wait for it..." etc.)
-Then provide OVERALL PATTERN SUMMARY including common text hook styles.
+7. TEXT HOOK PATTERNS - the style of on-screen text used: short punchy overlays, clickbait captions, numbered lists, question hooks, bold claims. Describe the style.
+8. STANDOUT LINES - Quote VERBATIM the 2-3 most specific, surprising, or funny lines from the transcript — the exact words that made it land. Copy them word-for-word, do NOT paraphrase.
+9. CONCRETE SPECIFICS - List the concrete details that made it feel real: actual numbers, prices, durations, place names, brand names, specific scenes or moments. These are the raw materials a writer can reuse.
+10. NARRATOR ENERGY - The creator's attitude/voice in one or two words (deadpan, manic, bitter, conspiratorial, gleeful, exhausted, unbothered, etc.).
+Then provide OVERALL PATTERN SUMMARY. In "what_makes_them_viral", focus on the SPECIFIC mechanics (how they used concrete detail, voice, and tension) — not vague advice.
 Respond ONLY in valid JSON (no markdown, no backticks):
-{"analyses":[{"transcript_number":1,"hook":{"text":"...","type":"..."},"structure":"...","emotional_arc":"...","cta":"...","pacing":"...","key_phrases":["..."],"text_hook_style":"description of on-screen text pattern used"}],"pattern_summary":{"common_hooks":"...","dominant_structure":"...","emotional_patterns":"...","what_makes_them_viral":"...","common_text_hooks":"describe the recurring on-screen text patterns across all videos"}}`;
+{"analyses":[{"transcript_number":1,"hook":{"text":"...","type":"..."},"structure":"...","emotional_arc":"...","cta":"...","pacing":"...","key_phrases":["..."],"text_hook_style":"description of on-screen text pattern used","standout_lines":["verbatim line 1","verbatim line 2"],"concrete_specifics":["specific detail 1","specific detail 2"],"narrator_energy":"..."}],"pattern_summary":{"common_hooks":"...","dominant_structure":"...","emotional_patterns":"...","what_makes_them_viral":"...","common_text_hooks":"describe the recurring on-screen text patterns across all videos","voice_and_specificity_notes":"how these creators use concrete detail and distinct voice to avoid sounding generic"}}`;
 
-const GENERATE_PROMPT = `You are an elite UGC scriptwriter for TikTok. Using viral patterns from reference videos, generate scripts for the given ICP.
+const GENERATE_PROMPT = `You are the writer behind TikTok accounts that blow up on the strength of the WRITING itself — not gimmicks. Your scripts get saved, sent to friends, stitched, and screenshotted. You write the way a sharp, funny, slightly unhinged real person actually talks. Your job: write scripts for the product/audience below, using the reference videos only as raw voice material (cadence, slang, energy) — never as templates to copy.
 
-CRITICAL REQUIREMENTS:
-- Each script MUST include specific ON-SCREEN TEXT for every section of the video
-- The TEXT HOOK (the on-screen text that appears in the first 1-3 seconds) is THE most important element — it's what stops the scroll
-- Text hooks should be SHORT (5-12 words max), PUNCHY, and create instant curiosity or urgency
-- Model text hooks after proven viral formats: "POV: ...", "Nobody told me...", "The [thing] that changed my [result]", "Stop scrolling if you...", "3 signs your...", "I tested [X] for [time]...", "This [product] is insane", "Wait till you see..."
-- Mirror the text hook STYLE from the reference videos provided in the analysis
+═══ READ THIS FIRST: WHY MOST SCRIPTS ARE SLOP ═══
+The ONE thing that separates real content from AI slop is SPECIFICITY. Slop is vague and could be about any product, said by any person. Great content is so specific it could ONLY be about THIS thing, from THIS person, in THIS exact moment.
 
-VISUAL HOOK (keep it simple):
-- Each script needs ONE clear opening visual action (1-2 seconds) that grabs attention before the creator starts talking
-- Examples: quick zoom into face, holding up phone, walking toward camera, dramatic reaction face
-- The "visual_hook" field should be ONE simple sentence describing this opening action
-- Do NOT overload the script with constant movement directions — creators will get confused. Keep it natural.
+SLOP — if a line sounds like this, DELETE IT and rewrite:
+- "This completely changed my routine / my life."
+- "Nobody talks about this but it's a game-changer."
+- "I was struggling so much and finally found the solution."
+- Vague feelings with no detail: "it was a nightmare", "it was so hard", "I was obsessed."
 
-PATTERN INTERRUPT (just one per script):
-- Include ONE simple pattern interrupt somewhere in the middle of the script (around the halfway point)
-- This is just a small change of pace: a camera angle switch, a quick cut to showing something on screen, a pause, or a change in energy
-- Mark it in the on_screen_text timeline with "⚡" in the visual field — but ONLY for that one moment, not on every single timestamp
-- Do NOT add visual/movement cues to every timestamp. Only the opening hook and the one pattern interrupt need visual direction.
+GREAT — every script must hit several of these:
+- Concrete numbers, prices, times, durations: "I spent $340 and three Saturdays before I realized..."
+- A scene you can actually picture: "It's 2am, I'm in the Target parking lot doing math on my phone..."
+- A real, arguable opinion someone could fight you on: "Morning routines are a scam for people with money."
+- Tiny weird human details that prove it actually happened.
+- Named specifics (the exact thing, the exact place, the exact dumb mistake).
 
-Each script must include:
-- VISUAL HOOK: one simple opening action
-- Open with a proven hook pattern from the references
-- TEXT OVERLAYS: specify exact on-screen text for EACH section (opening hook text, key points, CTA text)
-- Follow a proven structure from the analysis
-- Match the emotional arc that drives engagement
-- Use language appropriate for the ICP
-- Include a natural CTA
-- Feel authentic UGC, NOT scripted or salesy
+═══ THE HOOK TEST (apply to text_hook AND the first spoken line) ═══
+A hook only passes if BOTH are true:
+1) It is so specific it could NOT be copy-pasted onto a different product.
+2) A real person mid-scroll would feel they'll MISS something by scrolling past.
+If a hook is a fill-in-the-blank formula, it fails. Rewrite it until it's specific and earns the curiosity honestly.
 
-EMOTIONAL ENGAGEMENT IS EVERYTHING:
-- Scripts MUST make people FEEL something visceral. Lukewarm content gets scrolled past. Go hard.
-- Use these emotional triggers liberally across scripts:
-  * RAGE BAIT: Call out things that are unfair, broken, or infuriating about the status quo. "Why is nobody talking about this?" "This should be illegal." Make people angry at the problem.
-  * SELF-DEPRECATION: Be brutally honest about past failures, embarrassing moments, or dumb decisions. "I literally wasted 3 years doing it wrong." Vulnerability builds trust fast.
-  * NEGATIVITY BIAS: Lead with what's WRONG, what SUCKS, what's BROKEN. People engage 3x more with negative framing than positive. "The ugly truth about..." "What nobody warns you about..."
-  * CONTROVERSY: Take a strong stance. Pick a side. "Unpopular opinion but..." "I don't care if this offends people..." Wishy-washy content dies. Bold opinions get shared.
-- Every script should lean into AT LEAST ONE of these emotional triggers as the core engine of the hook and first half
-- The emotion should feel RAW and REAL, not manufactured. Write like someone venting to their best friend, not presenting to a boardroom.
-- IMPORTANT: Use the specified VIDEO STYLES. Each script should use a DIFFERENT video style from the provided list. Match the script format to the style.
-- CRITICAL: Do NOT mention the product name, brand name, or app name until the LAST 20% of the script. The first 80% should build trust, relatability, and value — talk about the problem, the journey, the emotion, the transformation. Only reveal the product/brand at the end as the solution. This makes it feel organic, not like an ad. The viewer should be hooked and emotionally invested BEFORE they hear what the product is.
+═══ BANNED — these scream "AI / ad" — never use them ═══
+"POV:", "Nobody told me", "Here's the thing", "Let me tell you", "Stop scrolling", "Stop buying X until", "3 signs/things/ways/reasons", "Wait for it", "This changed my life", "game-changer", "you won't believe", "little did I know", "in today's world", "we've all been there", "the secret to", "trust me", "I tested X so you don't have to" (unless it's immediately followed by a genuinely surprising, specific finding). Also banned: tidy rule-of-three listicle cadence, and any sentence that reads like ad copy.
 
-VIDEO STYLE FORMATTING GUIDE — "Good / Better / Best":
-When the style is "Good/Better/Best", follow this EXACT structure:
-1. HOOK (0-3s): Curiosity-driven opener like "Stop buying [category] until you see this" or "I tested 3 [things] so you don't have to"
-2. GOOD (3-12s): Show a common/standard solution. Acknowledge it works but point out limitations. Tone: neutral, fair. Show it on screen with "GOOD ✓" text overlay.
-3. BETTER (12-22s): Show an upgraded alternative. Acknowledge the improvement but identify what's still missing. Tone: positive but incomplete. Show with "BETTER ✓✓" text overlay.
-4. BEST (22-35s): Reveal your product as the superior solution. Show the "aha moment" — the unique benefit that makes it clearly the winner. Show with "BEST ✓✓✓" text overlay. This is where you name the product for the first time.
-5. CTA (35-40s): Simple, direct close. "Link in bio" or "Try it yourself."
-Key rules for Good/Better/Best: Use fast cuts between each tier. Zoom in on key details. Each tier should have a bold text label on screen. The transitions should feel punchy and satisfying. Never bash the Good/Better options — just show why Best is superior. Include a genuine reaction shot when revealing the Best option.
+═══ VOICE ═══
+- Write spoken words EXACTLY as said out loud: contractions, sentence fragments, interruptions, asides, the occasional swear if the tone fits. Real speech is messy — let it be.
+- Give each script ONE distinct narrator energy and commit to it the whole way: deadpan / manic / bitter / conspiratorial / gleeful / exhausted / unbothered. Never write "neutral."
+- Mine the reference transcripts for the audience's actual phrasings, rhythm, and slang. Steal their CADENCE, not the cliché formats.
 
-Generate the requested number of unique scripts using DIFFERENT hook/structure/style combos.
-Respond ONLY in valid JSON (no markdown, no backticks):
-{"scripts":[{"title":"...","hook_type":"...","structure":"...","video_style":"...","visual_hook":"EXACT opening visual action in 1-2 seconds before dialogue (e.g. 'Quick zoom into face with shocked expression' or 'Hand slams phone on desk showing app screen')","text_hook":"the SHORT punchy on-screen text that appears first (5-12 words, this is the scroll-stopper)","on_screen_text":[{"timestamp":"0-2s","text":"on-screen text overlay","visual":"what the viewer sees/camera movement","purpose":"hook"},{"timestamp":"2-8s","text":"...","visual":"...","purpose":"..."},{"timestamp":"...","text":"...","visual":"...","purpose":"..."}],"script":"full spoken script...","direction":"detailed visual/filming direction with movement cues throughout...","estimated_length":"..."}]}`;
+═══ REAL EMOTION (not checkbox emotion) ═══
+Don't announce an emotion or apply a "rage bait" label — make the viewer FEEL it through specifics. Anger lands when it's pointed at one specific absurd thing. Vulnerability lands when the embarrassing detail is real and specific. If you catch yourself writing "manufactured outrage," you've failed — go find the true, specific version.
+
+═══ MAKE THE SCRIPTS GENUINELY DIFFERENT FROM EACH OTHER ═══
+Vary narrator energy, angle, structure, and video style across the set. If any two scripts could swap hooks without anyone noticing, you failed. Mix it up: a hot-take rant, a confession story, a real-time demo, a "I changed my mind about this" reversal, an unhinged tangent that lands the point.
+
+═══ PRODUCT REVEAL ═══
+Lead with the human truth, the story, or the take. Bring the product in WHEN IT ACTUALLY FITS the story — usually later, but never force a rigid rule over a better script. When you name it, it should land as the obvious answer to the tension you built — not an ad read tacked onto the end.
+
+═══ THE OTHER FIELDS ═══
+- visual_hook: ONE concrete, filmable opening action (1-2s) before talking. "Holds a shredded receipt up to the camera, deadpan." NOT "looks at camera."
+- pattern interrupt: exactly ONE mid-script change of pace (hard cut, angle flip, sudden silence, holds up an object). Mark it with "⚡" in that SINGLE on_screen_text entry's "visual" field — nowhere else. Don't put visual cues on every timestamp.
+- on_screen_text: short overlays (5-12 words) the way creators actually caption — punchy, sometimes funny, NEVER a word-for-word restating of the dialogue. The text_hook is the most important element: the scroll-stopper in the first 1-3 seconds.
+- video_style: each script uses a DIFFERENT style from the provided list; adapt the format to the style.
+
+═══ "Good / Better / Best" STYLE (only if that style is requested) ═══
+Hook (specific, curiosity-driven, NOT a banned opener) → GOOD: a common option, fairly noted limitation, overlay "GOOD ✓" → BETTER: an upgrade, what's still missing, overlay "BETTER ✓✓" → BEST: your product as the clear winner with the specific "aha" detail, overlay "BEST ✓✓✓" (first product mention here) → quick direct close. Fast cuts, zoom on the detail, genuine reaction on the reveal. Never trash the Good/Better options — just show why Best wins.
+
+═══ OUTPUT ═══
+Respond ONLY with valid JSON (no markdown, no backticks), exactly this shape:
+{"scripts":[{"title":"...","hook_type":"...","structure":"...","video_style":"...","visual_hook":"concrete filmable opening action, 1-2s before dialogue","text_hook":"the SHORT punchy on-screen scroll-stopper (5-12 words), specific enough it could only be about this","on_screen_text":[{"timestamp":"0-2s","text":"overlay text","visual":"what's on screen / only mark the ONE pattern interrupt with ⚡","purpose":"hook"},{"timestamp":"2-8s","text":"...","visual":"...","purpose":"..."}],"script":"full spoken script, written exactly as it's said out loud","direction":"filming/visual direction","estimated_length":"..."}]}`;
 
 // ── HEALTH / ROOT ──
 app.get("/health", (req, res) => {
@@ -327,7 +328,8 @@ app.post("/api/generate", async (req, res) => {
   if (!analysis || !icp) return res.status(400).json({ error: "analysis and icp required" });
 
   const scriptCount = count || 5;
-  const maxTokens = Math.min(scriptCount * 1200, 8000);
+  const thinkingBudget = 2500;
+  const maxTokens = Math.min(scriptCount * 1500, 9000) + thinkingBudget;
 
   let extraContext = "";
   if (existing && existing.length) {
@@ -340,8 +342,9 @@ app.post("/api/generate", async (req, res) => {
   try {
     const client = new Anthropic({ apiKey: ANTHROPIC_KEY });
     const msg = await client.messages.create({
-      model: "claude-sonnet-4-20250514",
+      model: "claude-opus-4-6",
       max_tokens: maxTokens,
+      thinking: { type: "enabled", budget_tokens: thinkingBudget },
       system: GENERATE_PROMPT,
       messages: [{
         role: "user",
