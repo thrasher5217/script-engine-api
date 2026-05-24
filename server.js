@@ -114,6 +114,22 @@ app.get("/api/video", async (req, res) => {
   }
 });
 
+// ── Root route ──
+app.get("/", (req, res) => {
+  res.json({
+    name: "Script Engine API",
+    status: "running",
+    endpoints: {
+      search: "GET /api/search?query=keyword",
+      hashtag: "GET /api/search/hashtag?hashtag=keyword",
+      trending: "GET /api/trending",
+      transcript: "GET /api/transcript?url=tiktok_url",
+      video: "GET /api/video?url=tiktok_url",
+      health: "GET /health",
+    },
+  });
+});
+
 // ── Health check ──
 app.get("/health", (req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
