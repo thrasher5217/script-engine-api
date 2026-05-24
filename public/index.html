@@ -72,8 +72,6 @@ a { color: #c8ff00; text-decoration: none; }
   margin-bottom: 14px;
   animation: fadeUp .35s ease;
 }
-
-/* ── Badge ── */
 .badge {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 10px;
@@ -117,10 +115,7 @@ a { color: #c8ff00; text-decoration: none; }
   font-size: 13px;
   font-weight: 700;
 }
-.search-btn:disabled {
-  opacity: .5;
-  cursor: not-allowed;
-}
+.search-btn:disabled { opacity: .5; cursor: not-allowed; }
 
 /* ── Filters ── */
 .filters { display: flex; flex-wrap: wrap; gap: 10px; }
@@ -150,10 +145,7 @@ a { color: #c8ff00; text-decoration: none; }
 }
 
 /* ── Progress Bar ── */
-.progress-wrap {
-  margin: 16px 0;
-  animation: fadeUp .3s ease;
-}
+.progress-wrap { margin: 16px 0; animation: fadeUp .3s ease; }
 .progress-header {
   display: flex;
   justify-content: space-between;
@@ -309,11 +301,83 @@ a { color: #c8ff00; text-decoration: none; }
   color: #c8ff00;
   font-weight: 700;
 }
+.preview-btn {
+  padding: 6px 10px;
+  font-size: 10px;
+  color: rgba(255,255,255,.5);
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 5px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 600;
+}
+.preview-btn:hover { color: #c8ff00; border-color: rgba(200,255,0,.22); }
 .watch-link {
   padding: 6px 8px;
   font-size: 10px;
   color: rgba(255,255,255,.3);
   font-family: 'IBM Plex Mono', monospace;
+}
+
+/* ── Video Modal ── */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn .2s ease;
+}
+.modal-content {
+  position: relative;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 12px;
+  overflow: hidden;
+  animation: scaleIn .25s ease;
+}
+.modal-close {
+  position: absolute;
+  top: -40px; right: 0;
+  background: rgba(255,255,255,.1);
+  color: #fff;
+  border: none;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+}
+.modal-close:hover { background: rgba(255,255,255,.2); }
+.modal-embed {
+  width: 100%;
+  border: none;
+  border-radius: 12px;
+  background: #111;
+}
+.modal-fallback {
+  padding: 40px 20px;
+  text-align: center;
+  background: rgba(255,255,255,.03);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 12px;
+}
+.modal-fallback a {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 10px 24px;
+  background: #c8ff00;
+  color: #090909;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 13px;
 }
 
 /* ── Action Bar ── */
@@ -340,7 +404,7 @@ a { color: #c8ff00; text-decoration: none; }
 }
 
 /* ── Loading ── */
-.load-box { text-align: center; padding: 60px 20px; animation: fadeUp .3s ease; }
+.load-box { text-align: center; padding: 40px 20px; animation: fadeUp .3s ease; }
 .spinner {
   width: 34px; height: 34px;
   border: 3px solid rgba(255,255,255,.07);
@@ -392,6 +456,88 @@ a { color: #c8ff00; text-decoration: none; }
   color: #eee;
   font-family: 'DM Sans', sans-serif;
 }
+
+/* ── App Store Input ── */
+.app-input-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.app-input-row .input { flex: 1; }
+.app-parse-btn {
+  padding: 10px 20px;
+  background: #c8ff00;
+  color: #090909;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: 'IBM Plex Mono', monospace;
+  white-space: nowrap;
+}
+.app-parse-btn:disabled { opacity: .5; cursor: not-allowed; }
+
+/* ── App Info Display ── */
+.app-info {
+  background: rgba(200,255,0,.03);
+  border: 1px solid rgba(200,255,0,.1);
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 14px;
+  animation: fadeUp .3s ease;
+}
+.app-name {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.app-detail {
+  font-size: 12px;
+  color: rgba(255,255,255,.45);
+  line-height: 1.5;
+}
+
+/* ── Video Style Chips ── */
+.style-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+  margin-bottom: 14px;
+}
+.style-chip {
+  padding: 7px 14px;
+  background: rgba(255,255,255,.03);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 20px;
+  font-size: 12px;
+  color: rgba(255,255,255,.5);
+  font-family: 'DM Sans', sans-serif;
+  transition: all .15s ease;
+}
+.style-chip.active {
+  background: rgba(200,255,0,.1);
+  border-color: rgba(200,255,0,.3);
+  color: #c8ff00;
+  font-weight: 600;
+}
+.style-chip .style-icon { margin-right: 4px; }
+
+/* ── Optional Fields Toggle ── */
+.toggle-advanced {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 0;
+  font-size: 11px;
+  font-family: 'IBM Plex Mono', monospace;
+  color: rgba(255,255,255,.3);
+  background: none;
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+.toggle-advanced:hover { color: rgba(255,255,255,.5); }
+.toggle-arrow { transition: transform .2s ease; font-size: 8px; }
+.toggle-arrow.open { transform: rotate(90deg); }
 
 /* ── Buttons ── */
 .primary-btn {
@@ -471,6 +617,16 @@ a { color: #c8ff00; text-decoration: none; }
   padding: 2px 7px;
   border-radius: 4px;
 }
+.bv {
+  display: inline-block;
+  background: rgba(180,100,255,.08);
+  color: #c49fff;
+  font-size: 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  padding: 2px 7px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
 
 /* ── Scripts ── */
 .script-block {
@@ -541,9 +697,10 @@ a { color: #c8ff00; text-decoration: none; }
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(.9); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 /* ── Responsive ── */
@@ -552,6 +709,7 @@ a { color: #c8ff00; text-decoration: none; }
   .grid { grid-template-columns: 1fr; }
   .p-grid { grid-template-columns: 1fr; }
   .pipe { gap: 16px; }
+  .modal-content { max-width: 95%; }
 }
 </style>
 </head>
@@ -603,7 +761,6 @@ a { color: #c8ff00; text-decoration: none; }
       </div>
     </div>
 
-    <!-- Error -->
     <div id="eb" class="error hidden"></div>
 
     <!-- Progress Bar -->
@@ -618,23 +775,21 @@ a { color: #c8ff00; text-decoration: none; }
       <div class="progress-detail" id="progressDetail">Connecting to API...</div>
     </div>
 
-    <!-- Meta / Results -->
     <div id="mr" class="meta-row hidden">
       <span id="vc"></span>
       <span id="sc" class="sel-count"></span>
     </div>
     <div id="vg" class="grid"></div>
 
-    <!-- Action Bar -->
     <div id="ab" class="action-bar hidden">
       <span class="action-label" id="al">0 selected</span>
       <button class="action-btn" id="tb">Transcribe &amp; Analyze →</button>
     </div>
   </div>
 
-  <!-- STAGE 1: Loading / Processing -->
+  <!-- STAGE 1: Processing -->
   <div id="S1" class="hidden">
-    <div id="processProgressWrap" class="progress-wrap">
+    <div class="progress-wrap">
       <div class="progress-header">
         <span class="progress-label" id="processLabel">Processing...</span>
         <span class="progress-pct" id="processPct">0%</span>
@@ -656,12 +811,55 @@ a { color: #c8ff00; text-decoration: none; }
     <div id="ac"></div>
     <div class="card">
       <div class="badge">STEP 2</div>
-      <h2 class="sec-title">Define your client's ICP</h2>
-      <div class="field"><label class="label">Target Audience</label><input class="input" id="ia" placeholder="Women 25-35 with hormonal acne"></div>
-      <div class="field"><label class="label">Product / Service</label><input class="input" id="ip" placeholder="Natural salicylic acid cleanser, $24"></div>
-      <div class="field"><label class="label">Pain Points</label><input class="input" id="ix" placeholder="Tried everything, frustrated with expensive products"></div>
-      <div class="field"><label class="label">Brand Tone</label><input class="input" id="it" placeholder="Relatable, slightly sarcastic best friend"></div>
-      <div class="field"><label class="label">Video Style</label><input class="input" id="is" placeholder="Talking head, GRWM, storytime, POV"></div>
+      <h2 class="sec-title">Configure your brand</h2>
+
+      <!-- App Store Link -->
+      <div class="field">
+        <label class="label">App Store / Play Store Link</label>
+        <div class="app-input-row">
+          <input class="input" id="appUrl" placeholder="https://apps.apple.com/us/app/your-app/id123456789">
+          <button class="app-parse-btn" id="parseAppBtn">Analyze App</button>
+        </div>
+      </div>
+
+      <!-- App Info (shown after parse) -->
+      <div id="appInfo" class="app-info hidden">
+        <div class="app-name" id="appNameDisplay"></div>
+        <div class="app-detail" id="appDetailDisplay"></div>
+      </div>
+
+      <div id="parseError" class="error hidden"></div>
+
+      <!-- Video Style Selection -->
+      <div class="field">
+        <label class="label">Video Styles <span style="color:rgba(255,255,255,.2)">(select the styles you want scripts for)</span></label>
+        <div class="style-grid" id="styleGrid">
+          <button class="style-chip" data-style="Talking Head"><span class="style-icon">🗣</span>Talking Head</button>
+          <button class="style-chip" data-style="GRWM"><span class="style-icon">💄</span>GRWM</button>
+          <button class="style-chip" data-style="POV"><span class="style-icon">👁</span>POV</button>
+          <button class="style-chip" data-style="Storytime"><span class="style-icon">📖</span>Storytime</button>
+          <button class="style-chip" data-style="Voiceover"><span class="style-icon">🎙</span>Voiceover</button>
+          <button class="style-chip" data-style="Tutorial"><span class="style-icon">📋</span>Tutorial</button>
+          <button class="style-chip" data-style="Before/After"><span class="style-icon">✨</span>Before/After</button>
+          <button class="style-chip" data-style="Unboxing"><span class="style-icon">📦</span>Unboxing</button>
+          <button class="style-chip" data-style="Day in Life"><span class="style-icon">☀️</span>Day in Life</button>
+          <button class="style-chip" data-style="Screen Recording"><span class="style-icon">📱</span>Screen Recording</button>
+          <button class="style-chip" data-style="Green Screen"><span class="style-icon">🟩</span>Green Screen</button>
+          <button class="style-chip" data-style="Skit"><span class="style-icon">🎭</span>Skit</button>
+        </div>
+      </div>
+
+      <!-- Optional Manual Override -->
+      <button class="toggle-advanced" id="toggleAdvanced" type="button">
+        <span class="toggle-arrow" id="toggleArrow">▶</span> Edit ICP details manually
+      </button>
+      <div id="advancedFields" class="hidden">
+        <div class="field"><label class="label">Target Audience</label><input class="input" id="ia" placeholder="Auto-filled from app analysis"></div>
+        <div class="field"><label class="label">Product / Service</label><input class="input" id="ip" placeholder="Auto-filled from app analysis"></div>
+        <div class="field"><label class="label">Pain Points</label><input class="input" id="ix" placeholder="Auto-filled from app analysis"></div>
+        <div class="field"><label class="label">Brand Tone</label><input class="input" id="it" placeholder="Auto-filled from app analysis"></div>
+      </div>
+
       <div id="ie" class="error hidden"></div>
       <button class="primary-btn" id="gb">Generate Scripts →</button>
       <button class="sec-btn" id="bb">← Back to Search</button>
@@ -679,18 +877,28 @@ a { color: #c8ff00; text-decoration: none; }
 
 </div>
 
+<!-- Video Preview Modal -->
+<div id="videoModal" class="modal-overlay hidden">
+  <div class="modal-content">
+    <button class="modal-close" id="modalClose">✕</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
 <script>
 // ── State ──
-let V = [], D = [], sel = new Set(), T = [], A = null;
-let F = { t: "all", v: 0, s: "views" };
+var V = [], D = [], sel = new Set(), T = [], A = null;
+var F = { t: "all", v: 0, s: "views" };
+var selectedStyles = new Set();
+var parsedApp = null;
 
 // ── Helpers ──
-const $ = (id) => document.getElementById(id);
-const sh = (id) => $(id).classList.remove("hidden");
-const hi = (id) => $(id).classList.add("hidden");
+var $ = function(id) { return document.getElementById(id); };
+var sh = function(id) { $(id).classList.remove("hidden"); };
+var hi = function(id) { $(id).classList.add("hidden"); };
 
 function fmt(n) {
-  if (!n && n !== 0) return "—";
+  if (!n && n !== 0) return "\u2014";
   if (n >= 1e6) return (n / 1e6).toFixed(1) + "M";
   if (n >= 1e3) return (n / 1e3).toFixed(1) + "K";
   return n.toString();
@@ -698,7 +906,7 @@ function fmt(n) {
 
 function ago(ts) {
   if (!ts) return "";
-  const d = Date.now() / 1e3 - ts;
+  var d = Date.now() / 1e3 - ts;
   if (d < 3600) return Math.floor(d / 60) + "m";
   if (d < 86400) return Math.floor(d / 3600) + "h";
   if (d < 604800) return Math.floor(d / 86400) + "d";
@@ -706,23 +914,17 @@ function ago(ts) {
 }
 
 function pip(s) {
-  const idx = { discover: 0, select: 1, analyze: 2, scripts: 3 }[s] || 0;
-  for (let j = 0; j < 4; j++) {
+  var idx = { discover: 0, select: 1, analyze: 2, scripts: 3 }[s] || 0;
+  for (var j = 0; j < 4; j++) {
     $("d" + j).className = "pipe-dot " + (j <= idx ? "on" : "off");
     $("l" + j).className = "pipe-label " + (j <= idx ? "on" : "off");
   }
 }
 
-function showError(msg) {
-  $("eb").textContent = msg;
-  sh("eb");
-}
+function showError(msg) { $("eb").textContent = msg; sh("eb"); }
+function hideError() { hi("eb"); }
 
-function hideError() {
-  hi("eb");
-}
-
-// ── Progress Bar ──
+// ── Progress Bars ──
 function setProgress(pct, label, detail) {
   $("progressFill").style.width = pct + "%";
   $("progressPct").textContent = Math.round(pct) + "%";
@@ -739,7 +941,7 @@ function setProcessProgress(pct, label, detail) {
 
 // ── Parse API Response ──
 function parse(data) {
-  const list = data?.search_item_list || data?.aweme_list || [];
+  var list = data && (data.search_item_list || data.aweme_list) || [];
   return list.map(function(item) {
     var v = item.aweme_info || item;
     var st = v.statistics || {};
@@ -809,21 +1011,22 @@ function render() {
     if (v.cover) {
       html += '<img class="cover-img" src="' + v.cover + '" onerror="this.style.display=\'none\'">';
     } else {
-      html += '<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:28px;opacity:.3">🎬</div>';
+      html += '<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:28px;opacity:.3">\uD83C\uDFAC</div>';
     }
-    html += '<div class="views-overlay">▶ ' + fmt(v.views) + '</div>';
-    if (s) html += '<div class="check-mark">✓</div>';
-    if (vr >= 2) html += '<div class="viral-tag ' + (vr >= 5 ? "viral-high" : "viral-mid") + '">🔥 ' + v.vr + 'x</div>';
+    html += '<div class="views-overlay">\u25B6 ' + fmt(v.views) + '</div>';
+    if (s) html += '<div class="check-mark">\u2713</div>';
+    if (vr >= 2) html += '<div class="viral-tag ' + (vr >= 5 ? "viral-high" : "viral-mid") + '">\uD83D\uDD25 ' + v.vr + 'x</div>';
     html += '</div>';
     html += '<div class="v-info">';
     html += '<div class="v-caption">' + desc + '</div>';
     html += '<div class="v-author-row"><span class="v-author">@' + v.username + '</span><span class="v-time">' + ago(v.ct) + '</span></div>';
-    html += '<div class="v-stats"><span>❤ ' + fmt(v.likes) + '</span><span>💬 ' + fmt(v.comments) + '</span><span>↗ ' + fmt(v.shares) + '</span>';
-    if (v.followers) html += '<span style="color:rgba(255,255,255,.2)">👤 ' + fmt(v.followers) + '</span>';
+    html += '<div class="v-stats"><span>\u2764 ' + fmt(v.likes) + '</span><span>\uD83D\uDCAC ' + fmt(v.comments) + '</span><span>\u2197 ' + fmt(v.shares) + '</span>';
+    if (v.followers) html += '<span style="color:rgba(255,255,255,.2)">\uD83D\uDC64 ' + fmt(v.followers) + '</span>';
     html += '</div></div>';
     html += '<div class="v-actions">';
-    html += '<button class="sel-btn' + (s ? " on" : "") + '" onclick="toggleSelect(\'' + v.id + '\')">' + (s ? "✓ Selected" : "Select") + '</button>';
-    html += '<a href="' + v.url + '" target="_blank" class="watch-link">Watch ↗</a>';
+    html += '<button class="sel-btn' + (s ? " on" : "") + '" onclick="toggleSelect(\'' + v.id + '\')">' + (s ? "\u2713 Selected" : "Select") + '</button>';
+    html += '<button class="preview-btn" onclick="previewVideo(\'' + v.id + '\')">▶ Preview</button>';
+    html += '<a href="' + v.url + '" target="_blank" class="watch-link">TikTok \u2197</a>';
     html += '</div></div>';
   }
   g.innerHTML = html;
@@ -843,6 +1046,36 @@ window.toggleSelect = function(id) {
   render();
 };
 
+// ── Video Preview Modal ──
+window.previewVideo = function(videoId) {
+  var v = D.find(function(x) { return x.id === videoId; });
+  if (!v) return;
+
+  var embedUrl = "https://www.tiktok.com/embed/v2/" + videoId;
+  var body = $("modalBody");
+  body.innerHTML = '<iframe class="modal-embed" src="' + embedUrl + '" ' +
+    'width="100%" height="740" ' +
+    'allow="autoplay; encrypted-media" allowfullscreen></iframe>';
+
+  sh("videoModal");
+  document.body.style.overflow = "hidden";
+};
+
+$("modalClose").addEventListener("click", closeModal);
+$("videoModal").addEventListener("click", function(e) {
+  if (e.target === $("videoModal")) closeModal();
+});
+
+function closeModal() {
+  hi("videoModal");
+  $("modalBody").innerHTML = "";
+  document.body.style.overflow = "";
+}
+
+document.addEventListener("keydown", function(e) {
+  if (e.key === "Escape") closeModal();
+});
+
 // ── Search ──
 async function search() {
   var q = $("qi").value.trim();
@@ -855,20 +1088,17 @@ async function search() {
   V = [];
   sel.clear();
 
-  // Show progress bar
   sh("progressWrap");
   setProgress(0, "Searching TikTok...", "Connecting to API...");
   $("qb").disabled = true;
   $("qb").textContent = "Searching...";
 
-  // Simulate progress steps
   setProgress(10, "Searching TikTok...", 'Searching for "' + q + '"...');
 
   var progressTimer = setInterval(function() {
     var current = parseFloat($("progressFill").style.width) || 0;
     if (current < 85) {
-      var next = current + Math.random() * 12;
-      setProgress(Math.min(next, 85), null, "Fetching results...");
+      setProgress(Math.min(current + Math.random() * 12, 85), null, "Fetching results...");
     }
   }, 400);
 
@@ -882,14 +1112,10 @@ async function search() {
 
     setProgress(95, "Searching TikTok...", "Processing videos...");
     V = parse(d);
-
     setProgress(100, "Complete!", V.length + " videos found");
 
-    if (!V.length) {
-      showError("No videos found. Try a different keyword.");
-    } else {
-      pip("select");
-    }
+    if (!V.length) showError("No videos found. Try a different keyword.");
+    else pip("select");
     filt();
   } catch (e) {
     clearInterval(progressTimer);
@@ -897,7 +1123,6 @@ async function search() {
     showError("Search failed: " + e.message);
   }
 
-  // Hide progress bar after a moment
   setTimeout(function() {
     hi("progressWrap");
     setProgress(0, "Searching TikTok...", "Connecting to API...");
@@ -918,10 +1143,10 @@ async function transcribe() {
   pip("analyze");
   T = [];
 
-  var totalSteps = selected.length + 1; // +1 for analysis
+  var totalSteps = selected.length + 1;
 
   for (var i = 0; i < selected.length; i++) {
-    var pct = ((i / totalSteps) * 100).toFixed(0);
+    var pct = ((i / totalSteps) * 100);
     setProcessProgress(pct, "Transcribing videos...", "Transcribing " + (i + 1) + "/" + selected.length + ": @" + selected[i].username);
     $("gt").textContent = "Transcribing " + (i + 1) + "/" + selected.length + ": @" + selected[i].username;
 
@@ -935,15 +1160,11 @@ async function transcribe() {
         else if (d.transcript) txt = d.transcript;
         if (txt.length > 15) T.push(Object.assign({}, selected[i], { transcript: txt }));
       }
-    } catch (e) {
-      // Skip failed transcriptions
-    }
+    } catch (e) { /* skip */ }
   }
 
   if (!T.length) {
-    hi("S1");
-    sh("S0");
-    pip("discover");
+    hi("S1"); sh("S0"); pip("discover");
     showError("Couldn't transcribe any videos. Try selecting different ones.");
     return;
   }
@@ -963,27 +1184,18 @@ async function transcribe() {
     });
     if (!r.ok) throw new Error(await r.text());
     A = await r.json();
-
     setProcessProgress(100, "Analysis complete!", "Patterns identified");
     renderICP();
-
-    setTimeout(function() {
-      hi("S1");
-      sh("S2");
-      pip("analyze");
-    }, 800);
+    setTimeout(function() { hi("S1"); sh("S2"); pip("analyze"); }, 800);
   } catch (e) {
-    hi("S1");
-    sh("S0");
-    pip("discover");
+    hi("S1"); sh("S0"); pip("discover");
     showError("Analysis failed: " + e.message);
   }
 }
 
-// ── Render Pattern Analysis + ICP Form ──
+// ── Render Pattern Analysis ──
 function renderICP() {
   if (!A || !A.pattern_summary) return;
-
   var ps = A.pattern_summary;
   var items = [
     ["Hooks", ps.common_hooks],
@@ -991,10 +1203,8 @@ function renderICP() {
     ["Emotions", ps.emotional_patterns],
     ["Drivers", ps.what_makes_them_viral]
   ];
-
   var html = '<div class="p-card"><div class="badge">PATTERNS FOUND</div>';
-  html += '<h2 class="sec-title">What makes these viral</h2>';
-  html += '<div class="p-grid">';
+  html += '<h2 class="sec-title">What makes these viral</h2><div class="p-grid">';
   for (var i = 0; i < items.length; i++) {
     html += '<div><div class="p-label">' + items[i][0] + '</div>';
     html += '<div class="p-val">' + (items[i][1] || "") + '</div></div>';
@@ -1006,14 +1216,12 @@ function renderICP() {
     html = '<div class="card"><div class="badge">PER-VIDEO BREAKDOWN</div>';
     for (var i = 0; i < A.analyses.length; i++) {
       var a = A.analyses[i];
-      html += '<div class="a-item">';
-      html += '<div class="a-head">';
+      html += '<div class="a-item"><div class="a-head">';
       html += '<span class="a-num">#' + (a.transcript_number || i + 1) + '</span>';
       html += '<span class="by">' + (a.hook && a.hook.type ? a.hook.type : "") + '</span>';
-      html += '<span class="bb">' + (a.structure || "") + '</span>';
-      html += '</div>';
+      html += '<span class="bb">' + (a.structure || "") + '</span></div>';
       html += '<div class="a-hook">"' + (a.hook && a.hook.text ? a.hook.text : "") + '"</div>';
-      html += '<div class="a-meta"><span>🎭 ' + (a.emotional_arc || "") + '</span><span>⏱ ' + (a.pacing || "") + '</span></div>';
+      html += '<div class="a-meta"><span>\uD83C\uDFAD ' + (a.emotional_arc || "") + '</span><span>\u23F1 ' + (a.pacing || "") + '</span></div>';
       if (a.key_phrases && a.key_phrases.length) {
         html += '<div class="phrase-row">';
         for (var j = 0; j < a.key_phrases.length; j++) {
@@ -1028,21 +1236,114 @@ function renderICP() {
   }
 }
 
+// ── App Store Parser ──
+$("parseAppBtn").addEventListener("click", parseApp);
+
+async function parseApp() {
+  var url = $("appUrl").value.trim();
+  if (!url) { $("parseError").textContent = "Paste an App Store or Google Play link."; sh("parseError"); return; }
+
+  hi("parseError");
+  $("parseAppBtn").disabled = true;
+  $("parseAppBtn").textContent = "Analyzing...";
+
+  try {
+    var r = await fetch("/api/parse-app", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ url: url })
+    });
+    if (!r.ok) throw new Error(await r.text());
+    parsedApp = await r.json();
+
+    // Show app info
+    $("appNameDisplay").textContent = parsedApp.appName || "App";
+    var detail = "";
+    if (parsedApp.audience) detail += "Audience: " + parsedApp.audience + "\n";
+    if (parsedApp.product) detail += "Product: " + parsedApp.product + "\n";
+    if (parsedApp.painPoints) detail += "Pain Points: " + parsedApp.painPoints;
+    $("appDetailDisplay").textContent = detail;
+    sh("appInfo");
+
+    // Fill manual fields
+    $("ia").value = parsedApp.audience || "";
+    $("ip").value = parsedApp.product || "";
+    $("ix").value = parsedApp.painPoints || "";
+    $("it").value = parsedApp.tone || "";
+
+    // Auto-select suggested styles
+    if (parsedApp.suggestedStyles && Array.isArray(parsedApp.suggestedStyles)) {
+      selectedStyles.clear();
+      parsedApp.suggestedStyles.forEach(function(s) { selectedStyles.add(s); });
+      updateStyleChips();
+    }
+  } catch (e) {
+    $("parseError").textContent = "Failed: " + e.message;
+    sh("parseError");
+  }
+
+  $("parseAppBtn").disabled = false;
+  $("parseAppBtn").textContent = "Analyze App";
+}
+
+// ── Video Style Chips ──
+document.querySelectorAll(".style-chip").forEach(function(chip) {
+  chip.addEventListener("click", function() {
+    var style = chip.dataset.style;
+    if (selectedStyles.has(style)) selectedStyles.delete(style);
+    else selectedStyles.add(style);
+    updateStyleChips();
+  });
+});
+
+function updateStyleChips() {
+  document.querySelectorAll(".style-chip").forEach(function(chip) {
+    if (selectedStyles.has(chip.dataset.style)) {
+      chip.classList.add("active");
+    } else {
+      chip.classList.remove("active");
+    }
+  });
+}
+
+// ── Advanced Fields Toggle ──
+$("toggleAdvanced").addEventListener("click", function() {
+  var fields = $("advancedFields");
+  var arrow = $("toggleArrow");
+  if (fields.classList.contains("hidden")) {
+    sh("advancedFields");
+    arrow.classList.add("open");
+  } else {
+    hi("advancedFields");
+    arrow.classList.remove("open");
+  }
+});
+
 // ── Generate Scripts ──
 async function gen() {
-  var icp = {
-    audience: $("ia").value,
-    product: $("ip").value,
-    painPoints: $("ix").value,
-    tone: $("it").value,
-    videoStyle: $("is").value
-  };
-
-  if (!icp.audience || !icp.product) {
-    $("ie").textContent = "Fill in at least Audience and Product.";
+  if (selectedStyles.size === 0) {
+    $("ie").textContent = "Select at least one video style.";
     sh("ie");
     return;
   }
+
+  // Check we have ICP data (from app parse or manual)
+  var audience = $("ia").value;
+  var product = $("ip").value;
+  if (!audience && !product && !parsedApp) {
+    $("ie").textContent = "Paste an App Store link or fill in the ICP fields manually.";
+    sh("ie");
+    return;
+  }
+
+  var icp = {
+    appName: parsedApp ? parsedApp.appName : "",
+    audience: audience || (parsedApp ? parsedApp.audience : ""),
+    product: product || (parsedApp ? parsedApp.product : ""),
+    painPoints: $("ix").value || (parsedApp ? parsedApp.painPoints : ""),
+    tone: $("it").value || (parsedApp ? parsedApp.tone : ""),
+    videoStyles: Array.from(selectedStyles)
+  };
 
   hi("ie");
   hi("S2");
@@ -1052,12 +1353,9 @@ async function gen() {
   setProcessProgress(0, "Generating scripts...", "Claude is writing viral scripts...");
   $("gt").textContent = "Writing viral scripts...";
 
-  // Animate progress
   var genTimer = setInterval(function() {
     var current = parseFloat($("processFill").style.width) || 0;
-    if (current < 90) {
-      setProcessProgress(current + Math.random() * 8, null, "Crafting unique scripts...");
-    }
+    if (current < 90) setProcessProgress(current + Math.random() * 8, null, "Crafting unique scripts...");
   }, 600);
 
   try {
@@ -1067,46 +1365,35 @@ async function gen() {
       body: JSON.stringify({ analysis: A, icp: icp })
     });
     clearInterval(genTimer);
-
     if (!r.ok) throw new Error(await r.text());
     var d = await r.json();
-
-    setProcessProgress(100, "Scripts ready!", d.scripts ? d.scripts.length + " scripts generated" : "Done");
+    setProcessProgress(100, "Scripts ready!", (d.scripts ? d.scripts.length : 0) + " scripts generated");
     renderScripts(d);
-
-    setTimeout(function() {
-      hi("S1");
-      sh("S3");
-      pip("scripts");
-    }, 800);
+    setTimeout(function() { hi("S1"); sh("S3"); pip("scripts"); }, 800);
   } catch (e) {
     clearInterval(genTimer);
-    hi("S1");
-    sh("S2");
-    pip("analyze");
+    hi("S1"); sh("S2"); pip("analyze");
     $("ie").textContent = "Generation failed: " + e.message;
     sh("ie");
   }
 }
 
-// ── Render Generated Scripts ──
+// ── Render Scripts ──
 function renderScripts(d) {
   var sc = d.scripts || [];
   window._sc = sc;
-
-  var html = '<div class="card"><div class="badge">🎬 SCRIPTS READY</div>';
+  var html = '<div class="card"><div class="badge">\uD83C\uDFAC SCRIPTS READY</div>';
   html += '<h2 class="sec-title">' + sc.length + ' Viral Scripts</h2>';
-
   for (var i = 0; i < sc.length; i++) {
     var s = sc[i];
-    html += '<div class="script-block">';
-    html += '<div class="script-head"><span class="script-num">' + (i + 1) + '</span>';
+    html += '<div class="script-block"><div class="script-head"><span class="script-num">' + (i + 1) + '</span>';
     html += '<div><div class="script-title">' + (s.title || "") + '</div>';
     html += '<div class="badge-row"><span class="by">' + (s.hook_type || "") + '</span>';
     html += '<span class="bb">' + (s.structure || "") + '</span>';
+    if (s.video_style) html += '<span class="bv">' + s.video_style + '</span>';
     html += '<span class="bg">' + (s.estimated_length || "") + '</span></div></div></div>';
     html += '<div class="script-body">' + (s.script || "") + '</div>';
-    html += '<div class="dir-box"><div class="dir-label">🎬 Direction</div>';
+    html += '<div class="dir-box"><div class="dir-label">\uD83C\uDFAC Direction</div>';
     html += '<div class="dir-text">' + (s.direction || "") + '</div></div>';
     html += '<button class="copy-btn" onclick="copyScript(this,' + i + ')">Copy Script</button>';
     html += '</div>';
@@ -1120,12 +1407,9 @@ window.copyScript = function(btn, i) {
   var s = window._sc[i];
   var text = s.title + "\n\n" + s.script + "\n\nDirection: " + s.direction;
   navigator.clipboard.writeText(text).then(function() {
-    btn.textContent = "Copied ✓";
+    btn.textContent = "Copied \u2713";
     btn.classList.add("copied");
-    setTimeout(function() {
-      btn.textContent = "Copy Script";
-      btn.classList.remove("copied");
-    }, 1500);
+    setTimeout(function() { btn.textContent = "Copy Script"; btn.classList.remove("copied"); }, 1500);
   });
 };
 
@@ -1134,42 +1418,25 @@ $("qb").addEventListener("click", search);
 $("qi").addEventListener("keydown", function(e) { if (e.key === "Enter") search(); });
 $("tb").addEventListener("click", transcribe);
 $("gb").addEventListener("click", gen);
-
-$("bb").addEventListener("click", function() {
-  hi("S2");
-  sh("S0");
-  pip("discover");
-});
-
-$("rb").addEventListener("click", function() {
-  hi("S3");
-  sh("S2");
-  pip("analyze");
-});
-
+$("bb").addEventListener("click", function() { hi("S2"); sh("S0"); pip("discover"); });
+$("rb").addEventListener("click", function() { hi("S3"); sh("S2"); pip("analyze"); });
 $("sb").addEventListener("click", function() {
-  hi("S3");
-  sh("S0");
-  pip("discover");
-  V = []; D = []; sel.clear(); T = []; A = null;
-  $("vg").innerHTML = "";
-  hi("mr");
-  hi("ab");
+  hi("S3"); sh("S0"); pip("discover");
+  V = []; D = []; sel.clear(); T = []; A = null; parsedApp = null;
+  selectedStyles.clear(); updateStyleChips();
+  $("vg").innerHTML = ""; hi("mr"); hi("ab"); hi("appInfo");
+  $("ia").value = ""; $("ip").value = ""; $("ix").value = ""; $("it").value = "";
+  $("appUrl").value = "";
 });
 
-// Filter buttons
+// ── Filter Buttons ──
 document.querySelectorAll(".f-btn").forEach(function(btn) {
   btn.addEventListener("click", function() {
-    var f = btn.dataset.f;
-    var v = btn.dataset.v;
-    // Deactivate siblings
-    btn.parentElement.querySelectorAll(".f-btn").forEach(function(x) {
-      x.classList.remove("active");
-    });
+    btn.parentElement.querySelectorAll(".f-btn").forEach(function(x) { x.classList.remove("active"); });
     btn.classList.add("active");
-    if (f === "t") F.t = v;
-    else if (f === "v") F.v = parseInt(v) || 0;
-    else if (f === "s") F.s = v;
+    if (btn.dataset.f === "t") F.t = btn.dataset.v;
+    else if (btn.dataset.f === "v") F.v = parseInt(btn.dataset.v) || 0;
+    else if (btn.dataset.f === "s") F.s = btn.dataset.v;
     filt();
   });
 });
