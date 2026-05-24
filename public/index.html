@@ -1128,6 +1128,7 @@ a { color: #c8ff00; text-decoration: none; }
       <span id="sc" class="sel-count"></span>
     </div>
     <div id="vg" class="grid"></div>
+    <button class="sec-btn hidden" id="loadMore" style="margin-bottom:12px">Load More Videos</button>
 
     <div id="ab" class="action-bar hidden">
       <span class="action-label" id="al">0 selected</span>
@@ -1276,6 +1277,8 @@ var V = [], D = [], sel = new Set(), T = [], A = null;
 var F = { t: "all", v: 0, s: "views" };
 var selectedStyles = new Set();
 var parsedApp = null;
+var searchCursor = null;
+var lastQuery = "";
 
 // ── Helpers ──
 var $ = function(id) { return document.getElementById(id); };
@@ -1470,8 +1473,11 @@ async function search() {
   $("vg").innerHTML = "";
   hi("mr");
   hi("ab");
+  hi("loadMore");
   V = [];
   sel.clear();
+  searchCursor = null;
+  lastQuery = q;
 
   sh("progressWrap");
   setProgress(0, "Searching TikTok...", "Connecting to API...");
@@ -1480,30 +1486,45 @@ async function search() {
 
   setProgress(10, "Searching TikTok...", 'Searching for "' + q + '"...');
 
-  var progressTimer = setInterval(function() {
-    var current = parseFloat($("progressFill").style.width) || 0;
-    if (current < 85) {
-      setProgress(Math.min(current + Math.random() * 12, 85), null, "Fetching results...");
-    }
-  }, 400);
-
   try {
-    var r = await fetch("/api/search?query=" + encodeURIComponent(q));
-    clearInterval(progressTimer);
-    setProgress(90, "Searching TikTok...", "Parsing results...");
+    // Fetch up to 3 pages automatically
+    for (var page = 0; page < 3; page++) {
+      var pct = 10 + (page * 25);
+      setProgress(pct, "Searching TikTok...", "Fetching page " + (page + 1) + "...");
 
-    if (!r.ok) throw new Error(await r.text());
-    var d = await r.json();
+      var url = "/api/search?query=" + encodeURIComponent(q);
+      if (searchCursor) url += "&cursor=" + encodeURIComponent(searchCursor);
+
+      var r = await fetch(url);
+      if (!r.ok) throw new Error(await r.text());
+      var d = await r.json();
+
+      var newVideos = parse(d);
+      V = V.concat(newVideos);
+
+      // Get cursor for next page
+      searchCursor = d.cursor || d.next_cursor || null;
+      if (!searchCursor || newVideos.length === 0) break;
+    }
 
     setProgress(95, "Searching TikTok...", "Processing videos...");
-    V = parse(d);
+
+    // Deduplicate by ID
+    var seen = {};
+    V = V.filter(function(v) {
+      if (seen[v.id]) return false;
+      seen[v.id] = true;
+      return true;
+    });
+
     setProgress(100, "Complete!", V.length + " videos found");
 
     if (!V.length) showError("No videos found. Try a different keyword.");
     else pip("select");
+
+    if (searchCursor) sh("loadMore");
     filt();
   } catch (e) {
-    clearInterval(progressTimer);
     setProgress(100, "Error", e.message);
     showError("Search failed: " + e.message);
   }
@@ -1515,6 +1536,37 @@ async function search() {
 
   $("qb").disabled = false;
   $("qb").textContent = "Search";
+}
+
+// ── Load More Videos ──
+async function loadMore() {
+  if (!searchCursor || !lastQuery) return;
+
+  $("loadMore").disabled = true;
+  $("loadMore").textContent = "Loading...";
+
+  try {
+    var url = "/api/search?query=" + encodeURIComponent(lastQuery) + "&cursor=" + encodeURIComponent(searchCursor);
+    var r = await fetch(url);
+    if (!r.ok) throw new Error(await r.text());
+    var d = await r.json();
+
+    var newVideos = parse(d);
+    var seen = {};
+    V.forEach(function(v) { seen[v.id] = true; });
+    newVideos = newVideos.filter(function(v) { return !seen[v.id]; });
+    V = V.concat(newVideos);
+
+    searchCursor = d.cursor || d.next_cursor || null;
+    if (!searchCursor) hi("loadMore");
+
+    filt();
+  } catch (e) {
+    showError("Load more failed: " + e.message);
+  }
+
+  $("loadMore").disabled = false;
+  $("loadMore").textContent = "Load More Videos";
 }
 
 // ── Transcribe & Analyze ──
@@ -2008,11 +2060,13 @@ $("qi").addEventListener("keydown", function(e) { if (e.key === "Enter") search(
 $("tb").addEventListener("click", transcribe);
 $("gb").addEventListener("click", gen);
 $("moreBtn").addEventListener("click", genMore);
+$("loadMore").addEventListener("click", loadMore);
 $("bb").addEventListener("click", function() { hi("S2"); sh("S0"); pip("discover"); });
 $("rb").addEventListener("click", function() { hi("S3"); sh("S2"); pip("analyze"); });
 $("sb").addEventListener("click", function() {
   hi("S3"); sh("S0"); pip("discover");
   V = []; D = []; sel.clear(); T = []; A = null; parsedApp = null;
+  searchCursor = null; lastQuery = "";
   window._allScripts = [];
   selectedStyles.clear(); updateStyleChips();
   $("vg").innerHTML = ""; hi("mr"); hi("ab"); hi("appInfo");
