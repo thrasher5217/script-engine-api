@@ -41,6 +41,13 @@ VISUAL HOOKS ARE CRITICAL:
 - Throughout the script, include MOVEMENT and VISUAL VARIETY — never just a static talking head. Specify camera changes, prop interactions, scene transitions, gestures, and physical actions
 - The "visual_hook" field should describe the EXACT opening visual action (1-2 seconds, no dialogue)
 
+PATTERN INTERRUPTIONS ARE ESSENTIAL FOR RETENTION:
+- Every script MUST include 2-3 PATTERN INTERRUPTS — these are sudden, small changes that reset the viewer's attention and prevent them from scrolling away
+- Types of pattern interrupts to use: sudden camera angle change (switch from front to side), jump cut to a different location or background, quick zoom in or out, change in speaking pace (fast → slow or slow → fast), a brief pause with a facial expression, holding up a prop or phone, snap/clap/sound effect moment, text overlay popping on screen, switching from talking to showing something, b-roll cutaway then back to speaker, change in lighting or color tone, whispering then speaking normally
+- Place pattern interrupts every 5-8 seconds throughout the script to maintain watch time
+- In the on_screen_text timeline, mark pattern interrupts with "⚡ PATTERN INTERRUPT:" in the visual field so the creator knows exactly when and how to break the pattern
+- The first pattern interrupt should happen around 5-8 seconds in (right after the hook lands) to lock in viewers who almost scrolled
+
 Each script must include:
 - VISUAL HOOK: a specific opening visual action/movement that stops the scroll
 - Open with a proven hook pattern from the references
