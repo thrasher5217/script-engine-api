@@ -955,6 +955,37 @@ a { color: #c8ff00; text-decoration: none; }
   text-align: right;
   padding-top: 2px;
 }
+.ost-visual {
+  font-size: 11px;
+  color: rgba(255,180,80,.5);
+  font-style: italic;
+  display: block;
+  margin-top: 2px;
+  font-weight: 400;
+}
+
+/* ── Visual Hook Display ── */
+.visual-hook-box {
+  background: linear-gradient(135deg, rgba(255,150,50,.08), rgba(255,100,30,.02));
+  border: 1px solid rgba(255,150,50,.2);
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+}
+.visual-hook-label {
+  font-size: 9px;
+  font-family: 'IBM Plex Mono', monospace;
+  color: rgba(255,150,50,.6);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 6px;
+}
+.visual-hook-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255,180,80,.9);
+  line-height: 1.4;
+}
 
 /* ── Utility ── */
 .hidden { display: none; }
@@ -1717,6 +1748,14 @@ function renderAllScripts() {
     if (s.video_style) html += '<span class="bv">' + s.video_style + '</span>';
     html += '<span class="bg">' + (s.estimated_length || "") + '</span></div></div></div>';
 
+    // Visual Hook
+    if (s.visual_hook) {
+      html += '<div class="visual-hook-box">';
+      html += '<div class="visual-hook-label">\uD83C\uDFA5 Visual Hook (opening action)</div>';
+      html += '<div class="visual-hook-text">' + s.visual_hook + '</div>';
+      html += '</div>';
+    }
+
     // Text Hook
     if (s.text_hook) {
       html += '<div class="text-hook-box">';
@@ -1725,15 +1764,17 @@ function renderAllScripts() {
       html += '</div>';
     }
 
-    // On-Screen Text Timeline
+    // On-Screen Text + Visual Timeline
     if (s.on_screen_text && s.on_screen_text.length) {
       html += '<div class="ost-box">';
-      html += '<div class="ost-header">\uD83D\uDCDD On-Screen Text Timeline</div>';
+      html += '<div class="ost-header">\uD83D\uDCDD On-Screen Text \u0026 Visual Timeline</div>';
       for (var j = 0; j < s.on_screen_text.length; j++) {
         var ost = s.on_screen_text[j];
         html += '<div class="ost-item">';
         html += '<span class="ost-time">' + (ost.timestamp || "") + '</span>';
-        html += '<span class="ost-text">' + (ost.text || "") + '</span>';
+        html += '<span class="ost-text">' + (ost.text || "");
+        if (ost.visual) html += '<span class="ost-visual">\uD83C\uDFA5 ' + ost.visual + '</span>';
+        html += '</span>';
         html += '<span class="ost-purpose">' + (ost.purpose || "") + '</span>';
         html += '</div>';
       }

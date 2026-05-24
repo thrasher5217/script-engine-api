@@ -35,9 +35,17 @@ CRITICAL REQUIREMENTS:
 - Model text hooks after proven viral formats: "POV: ...", "Nobody told me...", "The [thing] that changed my [result]", "Stop scrolling if you...", "3 signs your...", "I tested [X] for [time]...", "This [product] is insane", "Wait till you see..."
 - Mirror the text hook STYLE from the reference videos provided in the analysis
 
+VISUAL HOOKS ARE CRITICAL:
+- Every script MUST open with a strong VISUAL HOOK — a specific physical action, movement, or visual that grabs attention in the first 1-2 seconds BEFORE any words are spoken
+- Examples of visual hooks: walking toward camera, slamming product on desk, quick zoom into face, hand covering/uncovering lens, dramatic before/after reveal, holding up phone screen, quick cuts between scenes, pointing at screen, turning around to camera, unboxing motion, pouring/applying product, dramatic reaction face
+- Throughout the script, include MOVEMENT and VISUAL VARIETY — never just a static talking head. Specify camera changes, prop interactions, scene transitions, gestures, and physical actions
+- The "visual_hook" field should describe the EXACT opening visual action (1-2 seconds, no dialogue)
+
 Each script must include:
+- VISUAL HOOK: a specific opening visual action/movement that stops the scroll
 - Open with a proven hook pattern from the references
 - TEXT OVERLAYS: specify exact on-screen text for EACH section (opening hook text, key points, CTA text)
+- MOVEMENT CUES: in the on_screen_text array, include a "visual" field describing what the viewer SEES at each timestamp
 - Follow a proven structure from the analysis
 - Match the emotional arc that drives engagement
 - Use language appropriate for the ICP
@@ -45,10 +53,11 @@ Each script must include:
 - Be 30-60 seconds spoken aloud
 - Feel authentic UGC, NOT scripted or salesy
 - IMPORTANT: Use the specified VIDEO STYLES. Each script should use a DIFFERENT video style from the provided list. Match the script format to the style.
+- CRITICAL: Do NOT mention the product name, brand name, or app name until the LAST 20% of the script. The first 80% should build trust, relatability, and value — talk about the problem, the journey, the emotion, the transformation. Only reveal the product/brand at the end as the solution. This makes it feel organic, not like an ad. The viewer should be hooked and emotionally invested BEFORE they hear what the product is.
 
 Generate the requested number of unique scripts using DIFFERENT hook/structure/style combos.
 Respond ONLY in valid JSON (no markdown, no backticks):
-{"scripts":[{"title":"...","hook_type":"...","structure":"...","video_style":"...","text_hook":"the SHORT punchy on-screen text that appears first (5-12 words, this is the scroll-stopper)","on_screen_text":[{"timestamp":"0-3s","text":"the text overlay shown","purpose":"hook/point/cta"},{"timestamp":"3-10s","text":"...","purpose":"..."},{"timestamp":"...","text":"...","purpose":"..."}],"script":"full spoken script...","direction":"visual/filming direction...","estimated_length":"..."}]}`;
+{"scripts":[{"title":"...","hook_type":"...","structure":"...","video_style":"...","visual_hook":"EXACT opening visual action in 1-2 seconds before dialogue (e.g. 'Quick zoom into face with shocked expression' or 'Hand slams phone on desk showing app screen')","text_hook":"the SHORT punchy on-screen text that appears first (5-12 words, this is the scroll-stopper)","on_screen_text":[{"timestamp":"0-2s","text":"on-screen text overlay","visual":"what the viewer sees/camera movement","purpose":"hook"},{"timestamp":"2-8s","text":"...","visual":"...","purpose":"..."},{"timestamp":"...","text":"...","visual":"...","purpose":"..."}],"script":"full spoken script...","direction":"detailed visual/filming direction with movement cues throughout...","estimated_length":"..."}]}`;
 
 // ── HEALTH / ROOT ──
 app.get("/health", (req, res) => {
