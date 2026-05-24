@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
-const Anthropic = require("anthropic").default;
+const Anthropic = require("@anthropic-ai/sdk").default;
 
 const app = express();
 app.use(cors({ origin: "*" }));
