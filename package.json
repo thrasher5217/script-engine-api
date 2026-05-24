@@ -1,14 +1,16 @@
 {
-  "name": "script-engine-api",
+  "name": "script-engine",
   "version": "1.0.0",
-  "description": "TikTok Script Engine backend proxy for ScrapeCreators + Supadata APIs",
+  "description": "TikTok Viral Script Engine - Search viral TikToks, analyze patterns, generate UGC scripts",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "node server.js"
   },
   "dependencies": {
     "express": "^4.21.0",
-    "cors": "^2.8.5"
+    "cors": "^2.8.5",
+    "anthropic": "^0.39.0"
   },
   "engines": {
     "node": ">=18.0.0"

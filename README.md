@@ -1,63 +1,87 @@
-# Script Engine — Railway Backend
+# Script Engine
 
-A lightweight API proxy that lets your frontend app call ScrapeCreators and Supadata APIs without CORS issues.
+A full-stack app that searches viral TikTok videos, analyzes their patterns, and generates UGC scripts tailored to your client's ICP.
 
-## What it does
+## How it works
 
-Your frontend app calls YOUR Railway URL → this server forwards the request to ScrapeCreators/Supadata → returns the response to your frontend. That's it.
+1. **Search** — Enter a keyword, find viral TikToks with real engagement data
+2. **Filter & Sort** — By time (24h/3d/7d/30d), min views (10K/100K/1M), sort by views/likes/viral ratio
+3. **Select** — Pick videos to use as references
+4. **Transcribe** — Auto-transcribes selected videos
+5. **Analyze** — Claude identifies hooks, structures, emotional arcs, CTAs, and viral patterns
+6. **Generate** — Enter your client's ICP, get 5 tailored viral scripts
 
-## Endpoints
+## Tech Stack
 
-| Endpoint | What it does |
-|---|---|
-| `GET /api/search?query=skincare` | Search TikTok videos by keyword |
-| `GET /api/search/hashtag?hashtag=skincare` | Search by hashtag |
-| `GET /api/trending` | Get trending TikTok feed |
-| `GET /api/transcript?url=https://tiktok.com/...` | Get video transcript |
-| `GET /api/video?url=https://tiktok.com/...` | Get video details/metadata |
-| `GET /health` | Health check |
+- **Backend**: Express.js (serves API + frontend)
+- **TikTok Data**: ScrapeCreators API
+- **Transcription**: ScrapeCreators + Supadata (fallback)
+- **AI Analysis & Scripts**: Claude API (Anthropic)
+- **Frontend**: Vanilla HTML/CSS/JS (single file, no build step)
 
-## Deploy to Railway (5 minutes)
+## Deploy to Railway
 
-### Step 1: Push to GitHub
+### 1. Push to GitHub
 ```bash
 git init
 git add .
-git commit -m "Script Engine backend"
-git remote add origin https://github.com/YOUR_USER/script-engine-api.git
+git commit -m "Script Engine"
+git remote add origin https://github.com/YOUR_USER/script-engine.git
 git push -u origin main
 ```
 
-### Step 2: Deploy on Railway
-1. Go to [railway.app](https://railway.app) and sign in with GitHub
-2. Click **"New Project"** → **"Deploy from GitHub Repo"**
-3. Select your repo
-4. Railway auto-detects Node.js and deploys
+### 2. Deploy on Railway
+- Go to [railway.app](https://railway.app)
+- New Project → Deploy from GitHub → select the repo
+- Railway auto-detects Node.js and deploys
 
-### Step 3: Add environment variables
-In your Railway project dashboard, go to **Variables** and add:
+### 3. Set environment variables
+In Railway dashboard → Variables:
 
 ```
 SCRAPECREATORS_API_KEY=your_key_here
 SUPADATA_API_KEY=your_key_here
+ANTHROPIC_API_KEY=your_key_here
 ```
 
 Get your keys:
 - **ScrapeCreators**: [scrapecreators.com](https://scrapecreators.com) — free credits on signup
-- **Supadata**: [supadata.ai](https://supadata.ai) — 100 free transcriptions/month
+- **Supadata**: [supadata.ai](https://supadata.ai) — 100 free/month
+- **Anthropic**: [console.anthropic.com](https://console.anthropic.com) — pay-as-you-go
 
-### Step 4: Get your URL
-Railway gives you a public URL like `https://script-engine-api-production.up.railway.app`
+### 4. Done
+Railway gives you a URL. Open it. Everything works.
 
-### Step 5: Update your frontend
-In your React app, change the API base URL to your Railway URL:
-```javascript
-const API_BASE = "https://your-app.up.railway.app";
+## Project Structure
 
-// Then all API calls become:
-fetch(`${API_BASE}/api/search?query=${query}`)
+```
+script-engine/
+├── server.js          # Express server (API routes + serves frontend)
+├── package.json       # Dependencies
+├── public/
+│   └── index.html     # Complete frontend (single file)
+└── README.md
 ```
 
-## Cost
+## API Endpoints
 
-Railway free tier: 500 hours/month of compute + $5 credit — more than enough for this. Paid plan is $5/month for unlimited.
+| Route | Method | Description |
+|---|---|---|
+| `/api/search?query=keyword` | GET | Search TikTok by keyword |
+| `/api/search/hashtag?hashtag=tag` | GET | Search by hashtag |
+| `/api/trending` | GET | Get trending feed |
+| `/api/transcript?url=tiktok_url` | GET | Get video transcript |
+| `/api/video?url=tiktok_url` | GET | Get video metadata |
+| `/api/analyze` | POST | Analyze transcripts (Claude) |
+| `/api/generate` | POST | Generate scripts (Claude) |
+| `/health` | GET | Health check |
+
+## Monthly Cost
+
+| Service | Cost |
+|---|---|
+| Railway | Free tier or ~$5/mo |
+| ScrapeCreators | ~$10-30/mo depending on usage |
+| Supadata | Free (100/mo) or $9/mo |
+| Claude API | ~$15-20/mo at 500 videos |
+| **Total** | **~$30-55/month** |
