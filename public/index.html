@@ -3,60 +3,1176 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Script Engine</title>
+<title>Script Engine — TikTok Viral Script Generator</title>
+<meta name="description" content="Search viral TikToks, analyze patterns with AI, and generate UGC scripts tailored to your client's ICP.">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0}body{background:#090909;color:#eee;font-family:'DM Sans',sans-serif;min-height:100vh}::selection{background:#c8ff00;color:#090909}::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:3px}input:focus,textarea:focus{border-color:rgba(200,255,0,0.3)!important;outline:none}button{cursor:pointer;font-family:'DM Sans',sans-serif;border:none;transition:opacity .15s}button:hover{opacity:.9}button:active{transform:scale(.97)}a{color:#c8ff00;text-decoration:none}.wrap{max-width:920px;margin:0 auto;padding:24px 16px 80px}.header{text-align:center;margin-bottom:28px;animation:fadeUp .4s ease}.title{font-size:30px;font-family:'IBM Plex Mono',monospace;font-weight:700;letter-spacing:-1px}.sub{font-size:13px;color:rgba(255,255,255,.3);margin:4px 0 18px;font-weight:300}.pipe{display:flex;justify-content:center;gap:24px}.pipe-step{display:flex;flex-direction:column;align-items:center;gap:5px}.pipe-dot{width:8px;height:8px;border-radius:50%;transition:background .3s}.pipe-dot.on{background:#c8ff00}.pipe-dot.off{background:rgba(255,255,255,.1)}.pipe-label{font-size:10px;font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:1.5px;transition:opacity .3s}.pipe-label.on{opacity:1}.pipe-label.off{opacity:.3}.card{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:20px;margin-bottom:14px;animation:fadeUp .35s ease}.badge{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;letter-spacing:2px;color:#c8ff00;margin-bottom:8px;text-transform:uppercase}.sec-title{font-size:19px;font-weight:600;margin-bottom:14px}.error{background:rgba(255,40,40,.07);border:1px solid rgba(255,40,40,.18);color:#ff6b6b;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:14px;line-height:1.5}.search-row{display:flex;gap:8px;margin-bottom:12px}.search-input{flex:1;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:11px 14px;font-size:14px;color:#eee;font-family:'DM Sans',sans-serif}.search-btn{padding:11px 24px;background:#c8ff00;color:#090909;border-radius:8px;font-size:13px;font-weight:700}.filters{display:flex;flex-wrap:wrap;gap:10px}.f-group{display:flex;align-items:center;gap:4px;flex-wrap:wrap}.f-label{font-size:9px;font-family:'IBM Plex Mono',monospace;color:rgba(255,255,255,.25);text-transform:uppercase;letter-spacing:1px;margin-right:2px}.f-btn{padding:4px 9px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:5px;font-size:10px;font-family:'IBM Plex Mono',monospace;color:rgba(255,255,255,.4)}.f-btn.active{background:rgba(200,255,0,.08);border-color:rgba(200,255,0,.22);color:#c8ff00;font-weight:600}.meta-row{display:flex;justify-content:space-between;padding:0 2px;margin-bottom:10px;font-size:11px;font-family:'IBM Plex Mono',monospace;color:rgba(255,255,255,.25)}.sel-count{color:#c8ff00}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:10px;margin-bottom:16px}.v-card{background:rgba(255,255,255,.02);border:2px solid rgba(255,255,255,.06);border-radius:10px;overflow:hidden;animation:fadeUp .3s ease;transition:border-color .15s}.v-card.selected{border-color:#c8ff00}.cover-wrap{position:relative;width:100%;padding-top:56%;background:#111;cursor:pointer;overflow:hidden}.cover-img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}.views-overlay{position:absolute;bottom:6px;left:6px;background:rgba(0,0,0,.8);color:#fff;font-size:12px;font-family:'IBM Plex Mono',monospace;font-weight:700;padding:3px 8px;border-radius:4px}.check-mark{position:absolute;top:6px;right:6px;width:24px;height:24px;background:#c8ff00;color:#090909;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800}.viral-tag{position:absolute;top:6px;left:6px;font-size:10px;font-family:'IBM Plex Mono',monospace;font-weight:700;padding:2px 7px;border-radius:4px}.viral-high{background:rgba(200,255,0,.15);color:#c8ff00}.viral-mid{background:rgba(255,180,0,.15);color:#ffb400}.v-info{padding:8px 10px 4px}.v-caption{font-size:11.5px;color:rgba(255,255,255,.6);line-height:1.45;margin-bottom:5px;min-height:33px}.v-author-row{display:flex;justify-content:space-between;margin-bottom:5px}.v-author{font-size:10px;font-family:'IBM Plex Mono',monospace;color:rgba(255,255,255,.35)}.v-time{font-size:10px;color:rgba(255,255,255,.2)}.v-stats{display:flex;gap:8px;font-size:10px;color:rgba(255,255,255,.35);flex-wrap:wrap}.v-actions{display:flex;gap:5px;padding:6px 10px 10px}.sel-btn{flex:1;padding:6px 0;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:5px;color:rgba(255,255,255,.5);font-size:10px;font-family:'IBM Plex Mono',monospace;font-weight:600}.sel-btn.on{background:rgba(200,255,0,.1);border-color:rgba(200,255,0,.22);color:#c8ff00;font-weight:700}.watch-link{padding:6px 8px;font-size:10px;color:rgba(255,255,255,.3);font-family:'IBM Plex Mono',monospace}.action-bar{position:sticky;bottom:16px;display:flex;align-items:center;justify-content:space-between;background:rgba(9,9,9,.95);border:1px solid rgba(200,255,0,.2);border-radius:10px;padding:12px 16px;backdrop-filter:blur(12px)}.action-label{font-size:13px;color:rgba(255,255,255,.55)}.action-btn{padding:10px 24px;background:#c8ff00;color:#090909;border-radius:7px;font-size:13px;font-weight:700}.load-box{text-align:center;padding:60px 20px;animation:fadeUp .3s ease}.spinner{width:34px;height:34px;border:3px solid rgba(255,255,255,.07);border-top-color:#c8ff00;border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 14px}.load-text{font-size:14px;font-weight:500}.p-card{background:rgba(200,255,0,.025);border:1px solid rgba(200,255,0,.08);border-radius:12px;padding:20px;margin-bottom:14px;animation:fadeUp .35s ease}.p-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.p-label{font-size:9px;font-family:'IBM Plex Mono',monospace;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px}.p-val{font-size:12.5px;color:rgba(255,255,255,.68);line-height:1.55}.field{margin-bottom:13px}.label{display:block;font-size:10px;font-family:'IBM Plex Mono',monospace;color:rgba(255,255,255,.38);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}.input{width:100%;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.08);border-radius:7px;padding:10px 12px;font-size:13px;color:#eee;font-family:'DM Sans',sans-serif}.primary-btn{width:100%;padding:13px;background:#c8ff00;color:#090909;border-radius:8px;font-size:14px;font-weight:700;margin-top:6px}.sec-btn{padding:11px;background:transparent;color:rgba(255,255,255,.35);border:1px solid rgba(255,255,255,.08);border-radius:8px;font-size:12px;margin-top:8px;width:100%}.a-item{border-top:1px solid rgba(255,255,255,.05);padding:12px 0}.a-head{display:flex;align-items:center;gap:6px;margin-bottom:5px}.a-num{font-family:'IBM Plex Mono',monospace;font-size:11px;color:rgba(255,255,255,.2);font-weight:700}.a-hook{font-size:12px;font-style:italic;color:rgba(255,255,255,.55);margin-bottom:5px;line-height:1.5}.a-meta{display:flex;gap:14px;font-size:11px;color:rgba(255,255,255,.3)}.phrase-row{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}.phrase-chip{font-size:10px;background:rgba(255,255,255,.04);color:rgba(255,255,255,.4);padding:2px 6px;border-radius:3px}.by{display:inline-block;background:rgba(200,255,0,.08);color:#c8ff00;font-size:10px;font-family:'IBM Plex Mono',monospace;padding:2px 7px;border-radius:4px;text-transform:uppercase}.bb{display:inline-block;background:rgba(100,170,255,.08);color:#7cb8ff;font-size:10px;font-family:'IBM Plex Mono',monospace;padding:2px 7px;border-radius:4px;text-transform:uppercase}.bg{display:inline-block;background:rgba(255,255,255,.04);color:rgba(255,255,255,.35);font-size:10px;font-family:'IBM Plex Mono',monospace;padding:2px 7px;border-radius:4px}.script-block{background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.05);border-radius:10px;padding:16px;margin-bottom:12px}.script-head{display:flex;gap:12px;margin-bottom:10px}.script-num{font-family:'IBM Plex Mono',monospace;font-size:24px;font-weight:700;color:#c8ff00;min-width:28px}.script-title{font-size:14px;font-weight:600;margin-bottom:4px}.badge-row{display:flex;gap:5px;flex-wrap:wrap}.script-body{font-size:13px;line-height:1.8;color:rgba(255,255,255,.78);white-space:pre-wrap;padding:10px 0;border-top:1px solid rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.04)}.dir-box{margin-top:10px;padding:8px 12px;background:rgba(255,255,255,.015);border-radius:6px}.dir-label{font-size:9px;font-family:'IBM Plex Mono',monospace;color:rgba(255,255,255,.25);margin-bottom:3px;text-transform:uppercase;letter-spacing:1px}.dir-text{font-size:11.5px;color:rgba(255,255,255,.45);line-height:1.55}.copy-btn{margin-top:10px;padding:7px 14px;background:rgba(200,255,0,.07);color:#c8ff00;border:1px solid rgba(200,255,0,.15);border-radius:5px;font-size:10px;font-family:'IBM Plex Mono',monospace;font-weight:600}.copy-btn.copied{background:rgba(125,255,138,.1);color:#7dff8a;border-color:rgba(125,255,138,.2)}.btn-row{display:flex;gap:10px;margin-top:20px}.hidden{display:none}@keyframes spin{to{transform:rotate(360deg)}}@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}@media(max-width:600px){.title{font-size:24px}.grid{grid-template-columns:1fr}.p-grid{grid-template-columns:1fr}.pipe{gap:16px}}
+/* ── Reset & Base ── */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: #090909;
+  color: #eee;
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+}
+::selection { background: #c8ff00; color: #090909; }
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 3px; }
+input:focus, textarea:focus { border-color: rgba(200,255,0,0.3) !important; outline: none; }
+button {
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  border: none;
+  transition: opacity .15s, transform .1s;
+}
+button:hover { opacity: .9; }
+button:active { transform: scale(.97); }
+a { color: #c8ff00; text-decoration: none; }
+
+/* ── Layout ── */
+.wrap { max-width: 920px; margin: 0 auto; padding: 24px 16px 80px; }
+
+/* ── Header ── */
+.header { text-align: center; margin-bottom: 28px; animation: fadeUp .4s ease; }
+.title {
+  font-size: 30px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 700;
+  letter-spacing: -1px;
+}
+.sub {
+  font-size: 13px;
+  color: rgba(255,255,255,.3);
+  margin: 4px 0 18px;
+  font-weight: 300;
+}
+
+/* ── Pipeline Steps ── */
+.pipe { display: flex; justify-content: center; gap: 24px; }
+.pipe-step { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.pipe-dot { width: 8px; height: 8px; border-radius: 50%; transition: background .3s; }
+.pipe-dot.on { background: #c8ff00; }
+.pipe-dot.off { background: rgba(255,255,255,.1); }
+.pipe-label {
+  font-size: 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  transition: opacity .3s;
+}
+.pipe-label.on { opacity: 1; }
+.pipe-label.off { opacity: .3; }
+
+/* ── Cards ── */
+.card {
+  background: rgba(255,255,255,.025);
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 14px;
+  animation: fadeUp .35s ease;
+}
+
+/* ── Badge ── */
+.badge {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #c8ff00;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+.sec-title { font-size: 19px; font-weight: 600; margin-bottom: 14px; }
+
+/* ── Error ── */
+.error {
+  background: rgba(255,40,40,.07);
+  border: 1px solid rgba(255,40,40,.18);
+  color: #ff6b6b;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+
+/* ── Search ── */
+.search-row { display: flex; gap: 8px; margin-bottom: 12px; }
+.search-input {
+  flex: 1;
+  background: rgba(0,0,0,.4);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 8px;
+  padding: 11px 14px;
+  font-size: 14px;
+  color: #eee;
+  font-family: 'DM Sans', sans-serif;
+}
+.search-btn {
+  padding: 11px 24px;
+  background: #c8ff00;
+  color: #090909;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+}
+.search-btn:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+/* ── Filters ── */
+.filters { display: flex; flex-wrap: wrap; gap: 10px; }
+.f-group { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.f-label {
+  font-size: 9px;
+  font-family: 'IBM Plex Mono', monospace;
+  color: rgba(255,255,255,.25);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-right: 2px;
+}
+.f-btn {
+  padding: 4px 9px;
+  background: rgba(255,255,255,.03);
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 5px;
+  font-size: 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  color: rgba(255,255,255,.4);
+}
+.f-btn.active {
+  background: rgba(200,255,0,.08);
+  border-color: rgba(200,255,0,.22);
+  color: #c8ff00;
+  font-weight: 600;
+}
+
+/* ── Progress Bar ── */
+.progress-wrap {
+  margin: 16px 0;
+  animation: fadeUp .3s ease;
+}
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.progress-label {
+  font-size: 12px;
+  font-family: 'IBM Plex Mono', monospace;
+  color: rgba(255,255,255,.5);
+}
+.progress-pct {
+  font-size: 12px;
+  font-family: 'IBM Plex Mono', monospace;
+  color: #c8ff00;
+  font-weight: 700;
+}
+.progress-track {
+  width: 100%;
+  height: 6px;
+  background: rgba(255,255,255,.06);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #c8ff00, #a0e600);
+  border-radius: 3px;
+  width: 0%;
+  transition: width .3s ease;
+}
+.progress-detail {
+  font-size: 11px;
+  color: rgba(255,255,255,.3);
+  margin-top: 6px;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+/* ── Meta Row ── */
+.meta-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 2px;
+  margin-bottom: 10px;
+  font-size: 11px;
+  font-family: 'IBM Plex Mono', monospace;
+  color: rgba(255,255,255,.25);
+}
+.sel-count { color: #c8ff00; }
+
+/* ── Video Grid ── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(255px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.v-card {
+  background: rgba(255,255,255,.02);
+  border: 2px solid rgba(255,255,255,.06);
+  border-radius: 10px;
+  overflow: hidden;
+  animation: fadeUp .3s ease;
+  transition: border-color .15s;
+}
+.v-card.selected { border-color: #c8ff00; }
+.cover-wrap {
+  position: relative;
+  width: 100%;
+  padding-top: 56%;
+  background: #111;
+  cursor: pointer;
+  overflow: hidden;
+}
+.cover-img {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.views-overlay {
+  position: absolute;
+  bottom: 6px; left: 6px;
+  background: rgba(0,0,0,.8);
+  color: #fff;
+  font-size: 12px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+.check-mark {
+  position: absolute;
+  top: 6px; right: 6px;
+  width: 24px; height: 24px;
+  background: #c8ff00;
+  color: #090909;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 800;
+}
+.viral-tag {
+  position: absolute;
+  top: 6px; left: 6px;
+  font-size: 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+.viral-high { background: rgba(200,255,0,.15); color: #c8ff00; }
+.viral-mid { background: rgba(255,180,0,.15); color: #ffb400; }
+.v-info { padding: 8px 10px 4px; }
+.v-caption {
+  font-size: 11.5px;
+  color: rgba(255,255,255,.6);
+  line-height: 1.45;
+  margin-bottom: 5px;
+  min-height: 33px;
+}
+.v-author-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
+.v-author {
+  font-size: 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  color: rgba(255,255,255,.35);
+}
+.v-time { font-size: 10px; color: rgba(255,255,255,.2); }
+.v-stats {
+  display: flex;
+  gap: 8px;
+  font-size: 10px;
+  color: rgba(255,255,255,.35);
+  flex-wrap: wrap;
+}
+.v-actions { display: flex; gap: 5px; padding: 6px 10px 10px; }
+.sel-btn {
+  flex: 1;
+  padding: 6px 0;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 5px;
+  color: rgba(255,255,255,.5);
+  font-size: 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 600;
+}
+.sel-btn.on {
+  background: rgba(200,255,0,.1);
+  border-color: rgba(200,255,0,.22);
+  color: #c8ff00;
+  font-weight: 700;
+}
+.watch-link {
+  padding: 6px 8px;
+  font-size: 10px;
+  color: rgba(255,255,255,.3);
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+/* ── Action Bar ── */
+.action-bar {
+  position: sticky;
+  bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(9,9,9,.95);
+  border: 1px solid rgba(200,255,0,.2);
+  border-radius: 10px;
+  padding: 12px 16px;
+  backdrop-filter: blur(12px);
+}
+.action-label { font-size: 13px; color: rgba(255,255,255,.55); }
+.action-btn {
+  padding: 10px 24px;
+  background: #c8ff00;
+  color: #090909;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* ── Loading ── */
+.load-box { text-align: center; padding: 60px 20px; animation: fadeUp .3s ease; }
+.spinner {
+  width: 34px; height: 34px;
+  border: 3px solid rgba(255,255,255,.07);
+  border-top-color: #c8ff00;
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+  margin: 0 auto 14px;
+}
+.load-text { font-size: 14px; font-weight: 500; }
+
+/* ── Pattern Card ── */
+.p-card {
+  background: rgba(200,255,0,.025);
+  border: 1px solid rgba(200,255,0,.08);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 14px;
+  animation: fadeUp .35s ease;
+}
+.p-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.p-label {
+  font-size: 9px;
+  font-family: 'IBM Plex Mono', monospace;
+  color: rgba(255,255,255,.3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 2px;
+}
+.p-val { font-size: 12.5px; color: rgba(255,255,255,.68); line-height: 1.55; }
+
+/* ── Form Fields ── */
+.field { margin-bottom: 13px; }
+.label {
+  display: block;
+  font-size: 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  color: rgba(255,255,255,.38);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 5px;
+}
+.input {
+  width: 100%;
+  background: rgba(0,0,0,.3);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 7px;
+  padding: 10px 12px;
+  font-size: 13px;
+  color: #eee;
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* ── Buttons ── */
+.primary-btn {
+  width: 100%;
+  padding: 13px;
+  background: #c8ff00;
+  color: #090909;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  margin-top: 6px;
+}
+.sec-btn {
+  padding: 11px;
+  background: transparent;
+  color: rgba(255,255,255,.35);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 8px;
+  font-size: 12px;
+  margin-top: 8px;
+  width: 100%;
+}
+
+/* ── Analysis Items ── */
+.a-item { border-top: 1px solid rgba(255,255,255,.05); padding: 12px 0; }
+.a-head { display: flex; align-items: center; gap: 6px; margin-bottom: 5px; }
+.a-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: rgba(255,255,255,.2);
+  font-weight: 700;
+}
+.a-hook {
+  font-size: 12px;
+  font-style: italic;
+  color: rgba(255,255,255,.55);
+  margin-bottom: 5px;
+  line-height: 1.5;
+}
+.a-meta { display: flex; gap: 14px; font-size: 11px; color: rgba(255,255,255,.3); }
+.phrase-row { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.phrase-chip {
+  font-size: 10px;
+  background: rgba(255,255,255,.04);
+  color: rgba(255,255,255,.4);
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+/* ── Tag Badges ── */
+.by {
+  display: inline-block;
+  background: rgba(200,255,0,.08);
+  color: #c8ff00;
+  font-size: 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  padding: 2px 7px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+.bb {
+  display: inline-block;
+  background: rgba(100,170,255,.08);
+  color: #7cb8ff;
+  font-size: 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  padding: 2px 7px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+.bg {
+  display: inline-block;
+  background: rgba(255,255,255,.04);
+  color: rgba(255,255,255,.35);
+  font-size: 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+
+/* ── Scripts ── */
+.script-block {
+  background: rgba(0,0,0,.2);
+  border: 1px solid rgba(255,255,255,.05);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+.script-head { display: flex; gap: 12px; margin-bottom: 10px; }
+.script-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 24px;
+  font-weight: 700;
+  color: #c8ff00;
+  min-width: 28px;
+}
+.script-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+.badge-row { display: flex; gap: 5px; flex-wrap: wrap; }
+.script-body {
+  font-size: 13px;
+  line-height: 1.8;
+  color: rgba(255,255,255,.78);
+  white-space: pre-wrap;
+  padding: 10px 0;
+  border-top: 1px solid rgba(255,255,255,.04);
+  border-bottom: 1px solid rgba(255,255,255,.04);
+}
+.dir-box {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background: rgba(255,255,255,.015);
+  border-radius: 6px;
+}
+.dir-label {
+  font-size: 9px;
+  font-family: 'IBM Plex Mono', monospace;
+  color: rgba(255,255,255,.25);
+  margin-bottom: 3px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.dir-text { font-size: 11.5px; color: rgba(255,255,255,.45); line-height: 1.55; }
+.copy-btn {
+  margin-top: 10px;
+  padding: 7px 14px;
+  background: rgba(200,255,0,.07);
+  color: #c8ff00;
+  border: 1px solid rgba(200,255,0,.15);
+  border-radius: 5px;
+  font-size: 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 600;
+}
+.copy-btn.copied {
+  background: rgba(125,255,138,.1);
+  color: #7dff8a;
+  border-color: rgba(125,255,138,.2);
+}
+.btn-row { display: flex; gap: 10px; margin-top: 20px; }
+
+/* ── Utility ── */
+.hidden { display: none; }
+
+/* ── Animations ── */
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .title { font-size: 24px; }
+  .grid { grid-template-columns: 1fr; }
+  .p-grid { grid-template-columns: 1fr; }
+  .pipe { gap: 16px; }
+}
 </style>
 </head>
 <body>
 <div class="wrap">
-<header class="header"><h1 class="title">◎ Script Engine</h1><p class="sub">Search viral TikToks → Select references → Generate scripts</p>
-<div class="pipe"><div class="pipe-step"><div class="pipe-dot on" id="d0"></div><span class="pipe-label on" id="l0">Search</span></div><div class="pipe-step"><div class="pipe-dot off" id="d1"></div><span class="pipe-label off" id="l1">Select</span></div><div class="pipe-step"><div class="pipe-dot off" id="d2"></div><span class="pipe-label off" id="l2">Analyze</span></div><div class="pipe-step"><div class="pipe-dot off" id="d3"></div><span class="pipe-label off" id="l3">Scripts</span></div></div></header>
 
-<div id="S0"><div class="card"><div class="search-row"><input class="search-input" id="qi" placeholder="Search TikTok... e.g. skincare routine, protein powder"><button class="search-btn" id="qb">Search</button></div>
-<div class="filters"><div class="f-group"><span class="f-label">Time</span><button class="f-btn" data-f="t" data-v="24h">24h</button><button class="f-btn" data-f="t" data-v="3d">3d</button><button class="f-btn" data-f="t" data-v="7d">7d</button><button class="f-btn" data-f="t" data-v="30d">30d</button><button class="f-btn active" data-f="t" data-v="all">All</button></div>
-<div class="f-group"><span class="f-label">Min views</span><button class="f-btn active" data-f="v" data-v="0">Any</button><button class="f-btn" data-f="v" data-v="10000">10K</button><button class="f-btn" data-f="v" data-v="100000">100K</button><button class="f-btn" data-f="v" data-v="1000000">1M</button></div>
-<div class="f-group"><span class="f-label">Sort</span><button class="f-btn active" data-f="s" data-v="views">Views</button><button class="f-btn" data-f="s" data-v="likes">Likes</button><button class="f-btn" data-f="s" data-v="viral">Viral</button><button class="f-btn" data-f="s" data-v="recent">New</button></div></div></div>
-<div id="eb" class="error hidden"></div><div id="lb" class="load-box hidden"><div class="spinner"></div><div class="load-text" id="lt">Searching...</div></div>
-<div id="mr" class="meta-row hidden"><span id="vc"></span><span id="sc" class="sel-count"></span></div><div id="vg" class="grid"></div>
-<div id="ab" class="action-bar hidden"><span class="action-label" id="al">0 selected</span><button class="action-btn" id="tb">Transcribe & Analyze →</button></div></div>
+  <!-- Header -->
+  <header class="header">
+    <h1 class="title">◎ Script Engine</h1>
+    <p class="sub">Search viral TikToks → Select references → Generate scripts</p>
+    <div class="pipe">
+      <div class="pipe-step"><div class="pipe-dot on" id="d0"></div><span class="pipe-label on" id="l0">Search</span></div>
+      <div class="pipe-step"><div class="pipe-dot off" id="d1"></div><span class="pipe-label off" id="l1">Select</span></div>
+      <div class="pipe-step"><div class="pipe-dot off" id="d2"></div><span class="pipe-label off" id="l2">Analyze</span></div>
+      <div class="pipe-step"><div class="pipe-dot off" id="d3"></div><span class="pipe-label off" id="l3">Scripts</span></div>
+    </div>
+  </header>
 
-<div id="S1" class="hidden"><div class="load-box"><div class="spinner"></div><div class="load-text" id="gt">Processing...</div></div></div>
+  <!-- STAGE 0: Search & Select -->
+  <div id="S0">
+    <div class="card">
+      <div class="search-row">
+        <input class="search-input" id="qi" placeholder="Search TikTok... e.g. skincare routine, protein powder">
+        <button class="search-btn" id="qb">Search</button>
+      </div>
+      <div class="filters">
+        <div class="f-group">
+          <span class="f-label">Time</span>
+          <button class="f-btn" data-f="t" data-v="24h">24h</button>
+          <button class="f-btn" data-f="t" data-v="3d">3d</button>
+          <button class="f-btn" data-f="t" data-v="7d">7d</button>
+          <button class="f-btn" data-f="t" data-v="30d">30d</button>
+          <button class="f-btn active" data-f="t" data-v="all">All</button>
+        </div>
+        <div class="f-group">
+          <span class="f-label">Min views</span>
+          <button class="f-btn active" data-f="v" data-v="0">Any</button>
+          <button class="f-btn" data-f="v" data-v="10000">10K</button>
+          <button class="f-btn" data-f="v" data-v="100000">100K</button>
+          <button class="f-btn" data-f="v" data-v="1000000">1M</button>
+        </div>
+        <div class="f-group">
+          <span class="f-label">Sort</span>
+          <button class="f-btn active" data-f="s" data-v="views">Views</button>
+          <button class="f-btn" data-f="s" data-v="likes">Likes</button>
+          <button class="f-btn" data-f="s" data-v="viral">Viral</button>
+          <button class="f-btn" data-f="s" data-v="recent">New</button>
+        </div>
+      </div>
+    </div>
 
-<div id="S2" class="hidden"><div id="pc"></div><div id="ac"></div>
-<div class="card"><div class="badge">STEP 2</div><h2 class="sec-title">Define your client's ICP</h2>
-<div class="field"><label class="label">Target Audience</label><input class="input" id="ia" placeholder="Women 25-35 with hormonal acne"></div>
-<div class="field"><label class="label">Product / Service</label><input class="input" id="ip" placeholder="Natural salicylic acid cleanser, $24"></div>
-<div class="field"><label class="label">Pain Points</label><input class="input" id="ix" placeholder="Tried everything, frustrated with expensive products"></div>
-<div class="field"><label class="label">Brand Tone</label><input class="input" id="it" placeholder="Relatable, slightly sarcastic best friend"></div>
-<div class="field"><label class="label">Video Style</label><input class="input" id="is" placeholder="Talking head, GRWM, storytime, POV"></div>
-<div id="ie" class="error hidden"></div><button class="primary-btn" id="gb">Generate Scripts →</button><button class="sec-btn" id="bb">← Back to Search</button></div></div>
+    <!-- Error -->
+    <div id="eb" class="error hidden"></div>
 
-<div id="S3" class="hidden"><div id="rc"></div><div class="btn-row"><button class="sec-btn" id="rb" style="flex:1">← Adjust ICP</button><button class="sec-btn" id="sb" style="flex:1">Start Over</button></div></div>
+    <!-- Progress Bar -->
+    <div id="progressWrap" class="progress-wrap hidden">
+      <div class="progress-header">
+        <span class="progress-label" id="progressLabel">Searching TikTok...</span>
+        <span class="progress-pct" id="progressPct">0%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="progress-detail" id="progressDetail">Connecting to API...</div>
+    </div>
+
+    <!-- Meta / Results -->
+    <div id="mr" class="meta-row hidden">
+      <span id="vc"></span>
+      <span id="sc" class="sel-count"></span>
+    </div>
+    <div id="vg" class="grid"></div>
+
+    <!-- Action Bar -->
+    <div id="ab" class="action-bar hidden">
+      <span class="action-label" id="al">0 selected</span>
+      <button class="action-btn" id="tb">Transcribe &amp; Analyze →</button>
+    </div>
+  </div>
+
+  <!-- STAGE 1: Loading / Processing -->
+  <div id="S1" class="hidden">
+    <div id="processProgressWrap" class="progress-wrap">
+      <div class="progress-header">
+        <span class="progress-label" id="processLabel">Processing...</span>
+        <span class="progress-pct" id="processPct">0%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="processFill"></div>
+      </div>
+      <div class="progress-detail" id="processDetail">Starting...</div>
+    </div>
+    <div class="load-box">
+      <div class="spinner"></div>
+      <div class="load-text" id="gt">Processing...</div>
+    </div>
+  </div>
+
+  <!-- STAGE 2: Analysis + ICP Form -->
+  <div id="S2" class="hidden">
+    <div id="pc"></div>
+    <div id="ac"></div>
+    <div class="card">
+      <div class="badge">STEP 2</div>
+      <h2 class="sec-title">Define your client's ICP</h2>
+      <div class="field"><label class="label">Target Audience</label><input class="input" id="ia" placeholder="Women 25-35 with hormonal acne"></div>
+      <div class="field"><label class="label">Product / Service</label><input class="input" id="ip" placeholder="Natural salicylic acid cleanser, $24"></div>
+      <div class="field"><label class="label">Pain Points</label><input class="input" id="ix" placeholder="Tried everything, frustrated with expensive products"></div>
+      <div class="field"><label class="label">Brand Tone</label><input class="input" id="it" placeholder="Relatable, slightly sarcastic best friend"></div>
+      <div class="field"><label class="label">Video Style</label><input class="input" id="is" placeholder="Talking head, GRWM, storytime, POV"></div>
+      <div id="ie" class="error hidden"></div>
+      <button class="primary-btn" id="gb">Generate Scripts →</button>
+      <button class="sec-btn" id="bb">← Back to Search</button>
+    </div>
+  </div>
+
+  <!-- STAGE 3: Generated Scripts -->
+  <div id="S3" class="hidden">
+    <div id="rc"></div>
+    <div class="btn-row">
+      <button class="sec-btn" id="rb" style="flex:1">← Adjust ICP</button>
+      <button class="sec-btn" id="sb" style="flex:1">Start Over</button>
+    </div>
+  </div>
+
 </div>
+
 <script>
-let V=[],D=[],sel=new Set(),T=[],A=null,F={t:"all",v:0,s:"views"};
-const $=id=>document.getElementById(id),sh=id=>$(id).classList.remove("hidden"),hi=id=>$(id).classList.add("hidden");
-const fmt=n=>{if(!n&&n!==0)return"—";if(n>=1e6)return(n/1e6).toFixed(1)+"M";if(n>=1e3)return(n/1e3).toFixed(1)+"K";return n.toString()};
-const ago=ts=>{if(!ts)return"";const d=Date.now()/1e3-ts;if(d<3600)return Math.floor(d/60)+"m";if(d<86400)return Math.floor(d/3600)+"h";if(d<604800)return Math.floor(d/86400)+"d";return Math.floor(d/604800)+"w"};
-function pip(s){const i={discover:0,select:1,analyze:2,scripts:3}[s]||0;for(let j=0;j<4;j++){$("d"+j).className="pipe-dot "+(j<=i?"on":"off");$("l"+j).className="pipe-label "+(j<=i?"on":"off")}}
-function err(m){$("eb").textContent=m;sh("eb")}
-function parse(data){const list=data?.search_item_list||data?.aweme_list||[];return list.map(item=>{const v=item.aweme_info||item,st=v.statistics||{},au=v.author||{},uid=au.unique_id||"",vid=v.aweme_id||"";return{id:vid,desc:v.desc||"",ct:v.create_time||0,author:au.nickname||uid,username:uid,views:st.play_count||0,likes:st.digg_count||0,comments:st.comment_count||0,shares:st.share_count||0,cover:v.video?.cover?.url_list?.[0]||v.video?.origin_cover?.url_list?.[0]||"",url:`https://www.tiktok.com/@${uid}/video/${vid}`,followers:au.follower_count||0,vr:au.follower_count>0?(st.play_count/au.follower_count).toFixed(1):null}}).filter(v=>v.id)}
-function filt(){let r=[...V];if(F.t!=="all"){const now=Date.now()/1e3,c={["24h"]:86400,["3d"]:259200,["7d"]:604800,["30d"]:2592000}[F.t]||604800;r=r.filter(v=>v.ct&&(now-v.ct)<c)}if(F.v>0)r=r.filter(v=>v.views>=F.v);if(F.s==="views")r.sort((a,b)=>b.views-a.views);else if(F.s==="likes")r.sort((a,b)=>b.likes-a.likes);else if(F.s==="viral")r.sort((a,b)=>(parseFloat(b.vr)||0)-(parseFloat(a.vr)||0));else if(F.s==="recent")r.sort((a,b)=>b.ct-a.ct);D=r;render()}
-function render(){const g=$("vg");if(!D.length){g.innerHTML="";hi("mr");hi("ab");return}sh("mr");$("vc").textContent=D.length+" videos";usc();g.innerHTML=D.map(v=>{const s=sel.has(v.id),vr=parseFloat(v.vr)||0;return`<div class="v-card${s?" selected"}" data-id="${v.id}"><div class="cover-wrap" onclick="ts('${v.id}')">${v.cover?`<img class="cover-img" src="${v.cover}" onerror="this.style.display='none'">`:`<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:28px;opacity:.3">🎬</div>`}<div class="views-overlay">▶ ${fmt(v.views)}</div>${s?`<div class="check-mark">✓</div>`:""}${vr>=2?`<div class="viral-tag ${vr>=5?"viral-high":"viral-mid"}">🔥 ${v.vr}x</div>`:""}</div><div class="v-info"><div class="v-caption">${(v.desc||"").substring(0,85)}${(v.desc||"").length>85?"...":""}</div><div class="v-author-row"><span class="v-author">@${v.username}</span><span class="v-time">${ago(v.ct)}</span></div><div class="v-stats"><span>❤ ${fmt(v.likes)}</span><span>💬 ${fmt(v.comments)}</span><span>↗ ${fmt(v.shares)}</span>${v.followers?`<span style="color:rgba(255,255,255,.2)">👤 ${fmt(v.followers)}</span>`:""}</div></div><div class="v-actions"><button class="sel-btn${s?" on":""}" onclick="ts('${v.id}')">${s?"✓ Selected":"Select"}</button><a href="${v.url}" target="_blank" class="watch-link">Watch ↗</a></div></div>`}).join("")}
-function usc(){const n=sel.size;$("sc").textContent=n?n+" selected":"";$("al").textContent=n+" video"+(n>1?"s":"")+" selected";n?sh("ab"):hi("ab")}
-window.ts=function(id){sel.has(id)?sel.delete(id):sel.add(id);render()};
-async function search(){const q=$("qi").value.trim();if(!q){err("Enter a keyword.");return}hi("eb");sh("lb");$("vg").innerHTML="";hi("mr");hi("ab");V=[];sel.clear();try{const r=await fetch(`/api/search?query=${encodeURIComponent(q)}`);if(!r.ok)throw new Error(await r.text());const d=await r.json();V=parse(d);if(!V.length)err("No videos found.");filt()}catch(e){err("Search failed: "+e.message)}hi("lb")}
-async function transcribe(){const s=D.filter(v=>sel.has(v.id));if(!s.length){err("Select videos first.");return}hi("eb");hi("S0");sh("S1");pip("analyze");T=[];for(let i=0;i<s.length;i++){$("gt").textContent=`Transcribing ${i+1}/${s.length}: @${s[i].username}`;try{const r=await fetch(`/api/transcript?url=${encodeURIComponent(s[i].url)}`);if(r.ok){const d=await r.json();let txt="";if(typeof d.content==="string")txt=d.content;else if(Array.isArray(d.content))txt=d.content.map(x=>x.text||"").join(" ");else if(d.transcript)txt=d.transcript;if(txt.length>15)T.push({...s[i],transcript:txt})}}catch{}}if(!T.length){hi("S1");sh("S0");pip("discover");err("Couldn't transcribe. Try different videos.");return}$("gt").textContent=`Analyzing ${T.length} videos...`;try{const r=await fetch("/api/analyze",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({transcripts:T.map(t=>({username:t.username,views:fmt(t.views),transcript:t.transcript}))})});if(!r.ok)throw new Error(await r.text());A=await r.json();renderICP();hi("S1");sh("S2");pip("analyze")}catch(e){hi("S1");sh("S0");pip("discover");err("Analysis failed: "+e.message)}}
-function renderICP(){if(!A?.pattern_summary)return;$("pc").innerHTML=`<div class="p-card"><div class="badge">PATTERNS FOUND</div><h2 class="sec-title">What makes these viral</h2><div class="p-grid">${[["Hooks",A.pattern_summary.common_hooks],["Structure",A.pattern_summary.dominant_structure],["Emotions",A.pattern_summary.emotional_patterns],["Drivers",A.pattern_summary.what_makes_them_viral]].map(([k,v])=>`<div><div class="p-label">${k}</div><div class="p-val">${v}</div></div>`).join("")}</div></div>`;if(A.analyses)$("ac").innerHTML=`<div class="card"><div class="badge">PER-VIDEO BREAKDOWN</div>${A.analyses.map((a,i)=>`<div class="a-item"><div class="a-head"><span class="a-num">#${a.transcript_number||i+1}</span><span class="by">${a.hook?.type||""}</span><span class="bb">${a.structure||""}</span></div><div class="a-hook">"${a.hook?.text||""}"</div><div class="a-meta"><span>🎭 ${a.emotional_arc||""}</span><span>⏱ ${a.pacing||""}</span></div>${a.key_phrases?.length?`<div class="phrase-row">${a.key_phrases.map(p=>`<span class="phrase-chip">${p}</span>`).join("")}</div>`:""}</div>`).join("")}</div>`}
-async function gen(){const icp={audience:$("ia").value,product:$("ip").value,painPoints:$("ix").value,tone:$("it").value,videoStyle:$("is").value};if(!icp.audience||!icp.product){$("ie").textContent="Fill in audience and product.";sh("ie");return}hi("ie");hi("S2");sh("S1");pip("scripts");$("gt").textContent="Writing viral scripts...";try{const r=await fetch("/api/generate",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({analysis:A,icp})});if(!r.ok)throw new Error(await r.text());const d=await r.json();renderScripts(d);hi("S1");sh("S3");pip("scripts")}catch(e){hi("S1");sh("S2");pip("analyze");$("ie").textContent="Failed: "+e.message;sh("ie")}}
-function renderScripts(d){const sc=d.scripts||[];window._sc=sc;$("rc").innerHTML=`<div class="card"><div class="badge">🎬 SCRIPTS READY</div><h2 class="sec-title">${sc.length} Viral Scripts</h2>${sc.map((s,i)=>`<div class="script-block"><div class="script-head"><span class="script-num">${i+1}</span><div><div class="script-title">${s.title}</div><div class="badge-row"><span class="by">${s.hook_type}</span><span class="bb">${s.structure}</span><span class="bg">${s.estimated_length}</span></div></div></div><div class="script-body">${s.script}</div><div class="dir-box"><div class="dir-label">🎬 Direction</div><div class="dir-text">${s.direction}</div></div><button class="copy-btn" onclick="cp(this,${i})">Copy Script</button></div>`).join("")}</div>`}
-window.cp=function(btn,i){const s=window._sc[i];navigator.clipboard.writeText(s.title+"\n\n"+s.script+"\n\nDirection: "+s.direction);btn.textContent="Copied ✓";btn.classList.add("copied");setTimeout(()=>{btn.textContent="Copy Script";btn.classList.remove("copied")},1500)};
-$("qb").onclick=search;$("qi").onkeydown=e=>{if(e.key==="Enter")search()};$("tb").onclick=transcribe;$("gb").onclick=gen;
-$("bb").onclick=()=>{hi("S2");sh("S0");pip("discover")};$("rb").onclick=()=>{hi("S3");sh("S2");pip("analyze")};
-$("sb").onclick=()=>{hi("S3");sh("S0");pip("discover");V=[];D=[];sel.clear();T=[];A=null;$("vg").innerHTML="";hi("mr");hi("ab")};
-document.querySelectorAll(".f-btn").forEach(b=>b.onclick=()=>{const f=b.dataset.f,v=b.dataset.v;b.parentElement.querySelectorAll(".f-btn").forEach(x=>x.classList.remove("active"));b.classList.add("active");if(f==="t")F.t=v;else if(f==="v")F.v=parseInt(v)||0;else if(f==="s")F.s=v;filt()});
+// ── State ──
+let V = [], D = [], sel = new Set(), T = [], A = null;
+let F = { t: "all", v: 0, s: "views" };
+
+// ── Helpers ──
+const $ = (id) => document.getElementById(id);
+const sh = (id) => $(id).classList.remove("hidden");
+const hi = (id) => $(id).classList.add("hidden");
+
+function fmt(n) {
+  if (!n && n !== 0) return "—";
+  if (n >= 1e6) return (n / 1e6).toFixed(1) + "M";
+  if (n >= 1e3) return (n / 1e3).toFixed(1) + "K";
+  return n.toString();
+}
+
+function ago(ts) {
+  if (!ts) return "";
+  const d = Date.now() / 1e3 - ts;
+  if (d < 3600) return Math.floor(d / 60) + "m";
+  if (d < 86400) return Math.floor(d / 3600) + "h";
+  if (d < 604800) return Math.floor(d / 86400) + "d";
+  return Math.floor(d / 604800) + "w";
+}
+
+function pip(s) {
+  const idx = { discover: 0, select: 1, analyze: 2, scripts: 3 }[s] || 0;
+  for (let j = 0; j < 4; j++) {
+    $("d" + j).className = "pipe-dot " + (j <= idx ? "on" : "off");
+    $("l" + j).className = "pipe-label " + (j <= idx ? "on" : "off");
+  }
+}
+
+function showError(msg) {
+  $("eb").textContent = msg;
+  sh("eb");
+}
+
+function hideError() {
+  hi("eb");
+}
+
+// ── Progress Bar ──
+function setProgress(pct, label, detail) {
+  $("progressFill").style.width = pct + "%";
+  $("progressPct").textContent = Math.round(pct) + "%";
+  if (label) $("progressLabel").textContent = label;
+  if (detail) $("progressDetail").textContent = detail;
+}
+
+function setProcessProgress(pct, label, detail) {
+  $("processFill").style.width = pct + "%";
+  $("processPct").textContent = Math.round(pct) + "%";
+  if (label) $("processLabel").textContent = label;
+  if (detail) $("processDetail").textContent = detail;
+}
+
+// ── Parse API Response ──
+function parse(data) {
+  const list = data?.search_item_list || data?.aweme_list || [];
+  return list.map(function(item) {
+    var v = item.aweme_info || item;
+    var st = v.statistics || {};
+    var au = v.author || {};
+    var uid = au.unique_id || "";
+    var vid = v.aweme_id || "";
+    return {
+      id: vid,
+      desc: v.desc || "",
+      ct: v.create_time || 0,
+      author: au.nickname || uid,
+      username: uid,
+      views: st.play_count || 0,
+      likes: st.digg_count || 0,
+      comments: st.comment_count || 0,
+      shares: st.share_count || 0,
+      cover: (v.video && v.video.cover && v.video.cover.url_list && v.video.cover.url_list[0]) ||
+             (v.video && v.video.origin_cover && v.video.origin_cover.url_list && v.video.origin_cover.url_list[0]) || "",
+      url: "https://www.tiktok.com/@" + uid + "/video/" + vid,
+      followers: au.follower_count || 0,
+      vr: au.follower_count > 0 ? (st.play_count / au.follower_count).toFixed(1) : null
+    };
+  }).filter(function(v) { return v.id; });
+}
+
+// ── Filter & Sort ──
+function filt() {
+  var r = V.slice();
+  if (F.t !== "all") {
+    var now = Date.now() / 1e3;
+    var cutoffs = { "24h": 86400, "3d": 259200, "7d": 604800, "30d": 2592000 };
+    var c = cutoffs[F.t] || 604800;
+    r = r.filter(function(v) { return v.ct && (now - v.ct) < c; });
+  }
+  if (F.v > 0) r = r.filter(function(v) { return v.views >= F.v; });
+  if (F.s === "views") r.sort(function(a, b) { return b.views - a.views; });
+  else if (F.s === "likes") r.sort(function(a, b) { return b.likes - a.likes; });
+  else if (F.s === "viral") r.sort(function(a, b) { return (parseFloat(b.vr) || 0) - (parseFloat(a.vr) || 0); });
+  else if (F.s === "recent") r.sort(function(a, b) { return b.ct - a.ct; });
+  D = r;
+  render();
+}
+
+// ── Render Video Cards ──
+function render() {
+  var g = $("vg");
+  if (!D.length) {
+    g.innerHTML = "";
+    hi("mr");
+    hi("ab");
+    return;
+  }
+  sh("mr");
+  $("vc").textContent = D.length + " videos";
+  updateSelCount();
+
+  var html = "";
+  for (var i = 0; i < D.length; i++) {
+    var v = D[i];
+    var s = sel.has(v.id);
+    var vr = parseFloat(v.vr) || 0;
+    var desc = (v.desc || "").substring(0, 85);
+    if ((v.desc || "").length > 85) desc += "...";
+
+    html += '<div class="v-card' + (s ? " selected" : "") + '" data-id="' + v.id + '">';
+    html += '<div class="cover-wrap" onclick="toggleSelect(\'' + v.id + '\')">';
+    if (v.cover) {
+      html += '<img class="cover-img" src="' + v.cover + '" onerror="this.style.display=\'none\'">';
+    } else {
+      html += '<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:28px;opacity:.3">🎬</div>';
+    }
+    html += '<div class="views-overlay">▶ ' + fmt(v.views) + '</div>';
+    if (s) html += '<div class="check-mark">✓</div>';
+    if (vr >= 2) html += '<div class="viral-tag ' + (vr >= 5 ? "viral-high" : "viral-mid") + '">🔥 ' + v.vr + 'x</div>';
+    html += '</div>';
+    html += '<div class="v-info">';
+    html += '<div class="v-caption">' + desc + '</div>';
+    html += '<div class="v-author-row"><span class="v-author">@' + v.username + '</span><span class="v-time">' + ago(v.ct) + '</span></div>';
+    html += '<div class="v-stats"><span>❤ ' + fmt(v.likes) + '</span><span>💬 ' + fmt(v.comments) + '</span><span>↗ ' + fmt(v.shares) + '</span>';
+    if (v.followers) html += '<span style="color:rgba(255,255,255,.2)">👤 ' + fmt(v.followers) + '</span>';
+    html += '</div></div>';
+    html += '<div class="v-actions">';
+    html += '<button class="sel-btn' + (s ? " on" : "") + '" onclick="toggleSelect(\'' + v.id + '\')">' + (s ? "✓ Selected" : "Select") + '</button>';
+    html += '<a href="' + v.url + '" target="_blank" class="watch-link">Watch ↗</a>';
+    html += '</div></div>';
+  }
+  g.innerHTML = html;
+}
+
+function updateSelCount() {
+  var n = sel.size;
+  $("sc").textContent = n ? n + " selected" : "";
+  $("al").textContent = n + " video" + (n > 1 ? "s" : "") + " selected";
+  if (n) sh("ab"); else hi("ab");
+}
+
+// ── Toggle Video Selection ──
+window.toggleSelect = function(id) {
+  if (sel.has(id)) sel.delete(id);
+  else sel.add(id);
+  render();
+};
+
+// ── Search ──
+async function search() {
+  var q = $("qi").value.trim();
+  if (!q) { showError("Enter a keyword."); return; }
+
+  hideError();
+  $("vg").innerHTML = "";
+  hi("mr");
+  hi("ab");
+  V = [];
+  sel.clear();
+
+  // Show progress bar
+  sh("progressWrap");
+  setProgress(0, "Searching TikTok...", "Connecting to API...");
+  $("qb").disabled = true;
+  $("qb").textContent = "Searching...";
+
+  // Simulate progress steps
+  setProgress(10, "Searching TikTok...", 'Searching for "' + q + '"...');
+
+  var progressTimer = setInterval(function() {
+    var current = parseFloat($("progressFill").style.width) || 0;
+    if (current < 85) {
+      var next = current + Math.random() * 12;
+      setProgress(Math.min(next, 85), null, "Fetching results...");
+    }
+  }, 400);
+
+  try {
+    var r = await fetch("/api/search?query=" + encodeURIComponent(q));
+    clearInterval(progressTimer);
+    setProgress(90, "Searching TikTok...", "Parsing results...");
+
+    if (!r.ok) throw new Error(await r.text());
+    var d = await r.json();
+
+    setProgress(95, "Searching TikTok...", "Processing videos...");
+    V = parse(d);
+
+    setProgress(100, "Complete!", V.length + " videos found");
+
+    if (!V.length) {
+      showError("No videos found. Try a different keyword.");
+    } else {
+      pip("select");
+    }
+    filt();
+  } catch (e) {
+    clearInterval(progressTimer);
+    setProgress(100, "Error", e.message);
+    showError("Search failed: " + e.message);
+  }
+
+  // Hide progress bar after a moment
+  setTimeout(function() {
+    hi("progressWrap");
+    setProgress(0, "Searching TikTok...", "Connecting to API...");
+  }, 1500);
+
+  $("qb").disabled = false;
+  $("qb").textContent = "Search";
+}
+
+// ── Transcribe & Analyze ──
+async function transcribe() {
+  var selected = D.filter(function(v) { return sel.has(v.id); });
+  if (!selected.length) { showError("Select videos first."); return; }
+
+  hideError();
+  hi("S0");
+  sh("S1");
+  pip("analyze");
+  T = [];
+
+  var totalSteps = selected.length + 1; // +1 for analysis
+
+  for (var i = 0; i < selected.length; i++) {
+    var pct = ((i / totalSteps) * 100).toFixed(0);
+    setProcessProgress(pct, "Transcribing videos...", "Transcribing " + (i + 1) + "/" + selected.length + ": @" + selected[i].username);
+    $("gt").textContent = "Transcribing " + (i + 1) + "/" + selected.length + ": @" + selected[i].username;
+
+    try {
+      var r = await fetch("/api/transcript?url=" + encodeURIComponent(selected[i].url));
+      if (r.ok) {
+        var d = await r.json();
+        var txt = "";
+        if (typeof d.content === "string") txt = d.content;
+        else if (Array.isArray(d.content)) txt = d.content.map(function(x) { return x.text || ""; }).join(" ");
+        else if (d.transcript) txt = d.transcript;
+        if (txt.length > 15) T.push(Object.assign({}, selected[i], { transcript: txt }));
+      }
+    } catch (e) {
+      // Skip failed transcriptions
+    }
+  }
+
+  if (!T.length) {
+    hi("S1");
+    sh("S0");
+    pip("discover");
+    showError("Couldn't transcribe any videos. Try selecting different ones.");
+    return;
+  }
+
+  setProcessProgress(90, "Analyzing patterns...", "Claude is analyzing " + T.length + " transcripts...");
+  $("gt").textContent = "Analyzing " + T.length + " videos with Claude...";
+
+  try {
+    var r = await fetch("/api/analyze", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        transcripts: T.map(function(t) {
+          return { username: t.username, views: fmt(t.views), transcript: t.transcript };
+        })
+      })
+    });
+    if (!r.ok) throw new Error(await r.text());
+    A = await r.json();
+
+    setProcessProgress(100, "Analysis complete!", "Patterns identified");
+    renderICP();
+
+    setTimeout(function() {
+      hi("S1");
+      sh("S2");
+      pip("analyze");
+    }, 800);
+  } catch (e) {
+    hi("S1");
+    sh("S0");
+    pip("discover");
+    showError("Analysis failed: " + e.message);
+  }
+}
+
+// ── Render Pattern Analysis + ICP Form ──
+function renderICP() {
+  if (!A || !A.pattern_summary) return;
+
+  var ps = A.pattern_summary;
+  var items = [
+    ["Hooks", ps.common_hooks],
+    ["Structure", ps.dominant_structure],
+    ["Emotions", ps.emotional_patterns],
+    ["Drivers", ps.what_makes_them_viral]
+  ];
+
+  var html = '<div class="p-card"><div class="badge">PATTERNS FOUND</div>';
+  html += '<h2 class="sec-title">What makes these viral</h2>';
+  html += '<div class="p-grid">';
+  for (var i = 0; i < items.length; i++) {
+    html += '<div><div class="p-label">' + items[i][0] + '</div>';
+    html += '<div class="p-val">' + (items[i][1] || "") + '</div></div>';
+  }
+  html += '</div></div>';
+  $("pc").innerHTML = html;
+
+  if (A.analyses) {
+    html = '<div class="card"><div class="badge">PER-VIDEO BREAKDOWN</div>';
+    for (var i = 0; i < A.analyses.length; i++) {
+      var a = A.analyses[i];
+      html += '<div class="a-item">';
+      html += '<div class="a-head">';
+      html += '<span class="a-num">#' + (a.transcript_number || i + 1) + '</span>';
+      html += '<span class="by">' + (a.hook && a.hook.type ? a.hook.type : "") + '</span>';
+      html += '<span class="bb">' + (a.structure || "") + '</span>';
+      html += '</div>';
+      html += '<div class="a-hook">"' + (a.hook && a.hook.text ? a.hook.text : "") + '"</div>';
+      html += '<div class="a-meta"><span>🎭 ' + (a.emotional_arc || "") + '</span><span>⏱ ' + (a.pacing || "") + '</span></div>';
+      if (a.key_phrases && a.key_phrases.length) {
+        html += '<div class="phrase-row">';
+        for (var j = 0; j < a.key_phrases.length; j++) {
+          html += '<span class="phrase-chip">' + a.key_phrases[j] + '</span>';
+        }
+        html += '</div>';
+      }
+      html += '</div>';
+    }
+    html += '</div>';
+    $("ac").innerHTML = html;
+  }
+}
+
+// ── Generate Scripts ──
+async function gen() {
+  var icp = {
+    audience: $("ia").value,
+    product: $("ip").value,
+    painPoints: $("ix").value,
+    tone: $("it").value,
+    videoStyle: $("is").value
+  };
+
+  if (!icp.audience || !icp.product) {
+    $("ie").textContent = "Fill in at least Audience and Product.";
+    sh("ie");
+    return;
+  }
+
+  hi("ie");
+  hi("S2");
+  sh("S1");
+  pip("scripts");
+
+  setProcessProgress(0, "Generating scripts...", "Claude is writing viral scripts...");
+  $("gt").textContent = "Writing viral scripts...";
+
+  // Animate progress
+  var genTimer = setInterval(function() {
+    var current = parseFloat($("processFill").style.width) || 0;
+    if (current < 90) {
+      setProcessProgress(current + Math.random() * 8, null, "Crafting unique scripts...");
+    }
+  }, 600);
+
+  try {
+    var r = await fetch("/api/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ analysis: A, icp: icp })
+    });
+    clearInterval(genTimer);
+
+    if (!r.ok) throw new Error(await r.text());
+    var d = await r.json();
+
+    setProcessProgress(100, "Scripts ready!", d.scripts ? d.scripts.length + " scripts generated" : "Done");
+    renderScripts(d);
+
+    setTimeout(function() {
+      hi("S1");
+      sh("S3");
+      pip("scripts");
+    }, 800);
+  } catch (e) {
+    clearInterval(genTimer);
+    hi("S1");
+    sh("S2");
+    pip("analyze");
+    $("ie").textContent = "Generation failed: " + e.message;
+    sh("ie");
+  }
+}
+
+// ── Render Generated Scripts ──
+function renderScripts(d) {
+  var sc = d.scripts || [];
+  window._sc = sc;
+
+  var html = '<div class="card"><div class="badge">🎬 SCRIPTS READY</div>';
+  html += '<h2 class="sec-title">' + sc.length + ' Viral Scripts</h2>';
+
+  for (var i = 0; i < sc.length; i++) {
+    var s = sc[i];
+    html += '<div class="script-block">';
+    html += '<div class="script-head"><span class="script-num">' + (i + 1) + '</span>';
+    html += '<div><div class="script-title">' + (s.title || "") + '</div>';
+    html += '<div class="badge-row"><span class="by">' + (s.hook_type || "") + '</span>';
+    html += '<span class="bb">' + (s.structure || "") + '</span>';
+    html += '<span class="bg">' + (s.estimated_length || "") + '</span></div></div></div>';
+    html += '<div class="script-body">' + (s.script || "") + '</div>';
+    html += '<div class="dir-box"><div class="dir-label">🎬 Direction</div>';
+    html += '<div class="dir-text">' + (s.direction || "") + '</div></div>';
+    html += '<button class="copy-btn" onclick="copyScript(this,' + i + ')">Copy Script</button>';
+    html += '</div>';
+  }
+  html += '</div>';
+  $("rc").innerHTML = html;
+}
+
+// ── Copy Script ──
+window.copyScript = function(btn, i) {
+  var s = window._sc[i];
+  var text = s.title + "\n\n" + s.script + "\n\nDirection: " + s.direction;
+  navigator.clipboard.writeText(text).then(function() {
+    btn.textContent = "Copied ✓";
+    btn.classList.add("copied");
+    setTimeout(function() {
+      btn.textContent = "Copy Script";
+      btn.classList.remove("copied");
+    }, 1500);
+  });
+};
+
+// ── Event Listeners ──
+$("qb").addEventListener("click", search);
+$("qi").addEventListener("keydown", function(e) { if (e.key === "Enter") search(); });
+$("tb").addEventListener("click", transcribe);
+$("gb").addEventListener("click", gen);
+
+$("bb").addEventListener("click", function() {
+  hi("S2");
+  sh("S0");
+  pip("discover");
+});
+
+$("rb").addEventListener("click", function() {
+  hi("S3");
+  sh("S2");
+  pip("analyze");
+});
+
+$("sb").addEventListener("click", function() {
+  hi("S3");
+  sh("S0");
+  pip("discover");
+  V = []; D = []; sel.clear(); T = []; A = null;
+  $("vg").innerHTML = "";
+  hi("mr");
+  hi("ab");
+});
+
+// Filter buttons
+document.querySelectorAll(".f-btn").forEach(function(btn) {
+  btn.addEventListener("click", function() {
+    var f = btn.dataset.f;
+    var v = btn.dataset.v;
+    // Deactivate siblings
+    btn.parentElement.querySelectorAll(".f-btn").forEach(function(x) {
+      x.classList.remove("active");
+    });
+    btn.classList.add("active");
+    if (f === "t") F.t = v;
+    else if (f === "v") F.v = parseInt(v) || 0;
+    else if (f === "s") F.s = v;
+    filt();
+  });
+});
 </script>
 </body>
 </html>
