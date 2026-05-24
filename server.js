@@ -55,6 +55,15 @@ Each script must include:
 - IMPORTANT: Use the specified VIDEO STYLES. Each script should use a DIFFERENT video style from the provided list. Match the script format to the style.
 - CRITICAL: Do NOT mention the product name, brand name, or app name until the LAST 20% of the script. The first 80% should build trust, relatability, and value — talk about the problem, the journey, the emotion, the transformation. Only reveal the product/brand at the end as the solution. This makes it feel organic, not like an ad. The viewer should be hooked and emotionally invested BEFORE they hear what the product is.
 
+VIDEO STYLE FORMATTING GUIDE — "Good / Better / Best":
+When the style is "Good/Better/Best", follow this EXACT structure:
+1. HOOK (0-3s): Curiosity-driven opener like "Stop buying [category] until you see this" or "I tested 3 [things] so you don't have to"
+2. GOOD (3-12s): Show a common/standard solution. Acknowledge it works but point out limitations. Tone: neutral, fair. Show it on screen with "GOOD ✓" text overlay.
+3. BETTER (12-22s): Show an upgraded alternative. Acknowledge the improvement but identify what's still missing. Tone: positive but incomplete. Show with "BETTER ✓✓" text overlay.
+4. BEST (22-35s): Reveal your product as the superior solution. Show the "aha moment" — the unique benefit that makes it clearly the winner. Show with "BEST ✓✓✓" text overlay. This is where you name the product for the first time.
+5. CTA (35-40s): Simple, direct close. "Link in bio" or "Try it yourself."
+Key rules for Good/Better/Best: Use fast cuts between each tier. Zoom in on key details. Each tier should have a bold text label on screen. The transitions should feel punchy and satisfying. Never bash the Good/Better options — just show why Best is superior. Include a genuine reaction shot when revealing the Best option.
+
 Generate the requested number of unique scripts using DIFFERENT hook/structure/style combos.
 Respond ONLY in valid JSON (no markdown, no backticks):
 {"scripts":[{"title":"...","hook_type":"...","structure":"...","video_style":"...","visual_hook":"EXACT opening visual action in 1-2 seconds before dialogue (e.g. 'Quick zoom into face with shocked expression' or 'Hand slams phone on desk showing app screen')","text_hook":"the SHORT punchy on-screen text that appears first (5-12 words, this is the scroll-stopper)","on_screen_text":[{"timestamp":"0-2s","text":"on-screen text overlay","visual":"what the viewer sees/camera movement","purpose":"hook"},{"timestamp":"2-8s","text":"...","visual":"...","purpose":"..."},{"timestamp":"...","text":"...","visual":"...","purpose":"..."}],"script":"full spoken script...","direction":"detailed visual/filming direction with movement cues throughout...","estimated_length":"..."}]}`;
