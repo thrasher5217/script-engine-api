@@ -712,6 +712,55 @@ a { color: #c8ff00; text-decoration: none; }
   color: rgba(255,255,255,.4);
 }
 
+/* ── Length Grid ── */
+.length-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-top: 6px;
+  margin-bottom: 14px;
+}
+.length-item {
+  background: rgba(255,255,255,.025);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 10px;
+  padding: 12px 10px;
+  text-align: center;
+}
+.length-dur {
+  font-size: 18px;
+  font-weight: 700;
+  font-family: 'IBM Plex Mono', monospace;
+  color: rgba(255,255,255,.5);
+  margin-bottom: 2px;
+}
+.length-label {
+  font-size: 9px;
+  color: rgba(255,255,255,.25);
+  font-family: 'IBM Plex Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+.length-input {
+  width: 50px;
+  background: rgba(0,0,0,.3);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 6px;
+  padding: 7px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #c8ff00;
+  font-family: 'IBM Plex Mono', monospace;
+  text-align: center;
+}
+.length-total {
+  font-size: 11px;
+  color: rgba(255,255,255,.3);
+  margin-top: 8px;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
 /* ── Generate More Bar ── */
 .more-bar {
   display: flex;
@@ -1160,13 +1209,32 @@ a { color: #c8ff00; text-decoration: none; }
         <div class="field"><label class="label">Brand Tone</label><input class="input" id="it" placeholder="Auto-filled from app analysis"></div>
       </div>
 
-      <!-- Script Count -->
+      <!-- Script Lengths -->
       <div class="field">
-        <label class="label">How many scripts?</label>
-        <div class="count-row">
-          <input class="count-input" id="scriptCount" type="number" min="1" max="20" value="5">
-          <span class="count-label">scripts will be generated using different styles</span>
+        <label class="label">How many scripts at each length?</label>
+        <div class="length-grid">
+          <div class="length-item">
+            <div class="length-dur">15s</div>
+            <div class="length-label">Quick hook</div>
+            <input class="length-input" id="len15" type="number" min="0" max="10" value="0">
+          </div>
+          <div class="length-item">
+            <div class="length-dur">30s</div>
+            <div class="length-label">Short</div>
+            <input class="length-input" id="len30" type="number" min="0" max="10" value="2">
+          </div>
+          <div class="length-item">
+            <div class="length-dur">45s</div>
+            <div class="length-label">Standard</div>
+            <input class="length-input" id="len45" type="number" min="0" max="10" value="2">
+          </div>
+          <div class="length-item">
+            <div class="length-dur">60s</div>
+            <div class="length-label">Long form</div>
+            <input class="length-input" id="len60" type="number" min="0" max="10" value="1">
+          </div>
         </div>
+        <div class="length-total" id="totalScripts">Total: 5 scripts</div>
       </div>
 
       <div id="ie" class="error hidden"></div>
@@ -1636,6 +1704,30 @@ $("toggleAdvanced").addEventListener("click", function() {
   }
 });
 
+// ── Length Input Listeners ──
+function updateTotal() {
+  var total = (parseInt($("len15").value) || 0) + (parseInt($("len30").value) || 0) +
+              (parseInt($("len45").value) || 0) + (parseInt($("len60").value) || 0);
+  $("totalScripts").textContent = "Total: " + total + " script" + (total !== 1 ? "s" : "");
+  return total;
+}
+["len15","len30","len45","len60"].forEach(function(id) {
+  $(id).addEventListener("input", updateTotal);
+});
+
+function getLengthSpecs() {
+  var specs = [];
+  var n15 = parseInt($("len15").value) || 0;
+  var n30 = parseInt($("len30").value) || 0;
+  var n45 = parseInt($("len45").value) || 0;
+  var n60 = parseInt($("len60").value) || 0;
+  if (n15) specs.push(n15 + " scripts at 15 seconds (quick hook, fast-paced, get to the point immediately)");
+  if (n30) specs.push(n30 + " scripts at 30 seconds (short and punchy, one key message)");
+  if (n45) specs.push(n45 + " scripts at 45 seconds (standard UGC length, room for a story arc)");
+  if (n60) specs.push(n60 + " scripts at 60 seconds (longer form, full narrative with buildup)");
+  return specs;
+}
+
 // ── Build ICP object ──
 function buildICP() {
   return {
@@ -1665,7 +1757,14 @@ async function gen() {
   }
 
   var icp = buildICP();
-  var count = parseInt($("scriptCount").value) || 5;
+  var count = updateTotal();
+  var lengthSpecs = getLengthSpecs();
+
+  if (count === 0) {
+    $("ie").textContent = "Set at least one script length.";
+    sh("ie");
+    return;
+  }
 
   hi("ie");
   hi("S2");
@@ -1684,7 +1783,7 @@ async function gen() {
     var r = await fetch("/api/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ analysis: A, icp: icp, count: count })
+      body: JSON.stringify({ analysis: A, icp: icp, count: count, lengthSpecs: lengthSpecs })
     });
     clearInterval(genTimer);
     if (!r.ok) throw new Error(await r.text());

@@ -55,8 +55,17 @@ Each script must include:
 - Match the emotional arc that drives engagement
 - Use language appropriate for the ICP
 - Include a natural CTA
-- Be 30-60 seconds spoken aloud
 - Feel authentic UGC, NOT scripted or salesy
+
+EMOTIONAL ENGAGEMENT IS EVERYTHING:
+- Scripts MUST make people FEEL something visceral. Lukewarm content gets scrolled past. Go hard.
+- Use these emotional triggers liberally across scripts:
+  * RAGE BAIT: Call out things that are unfair, broken, or infuriating about the status quo. "Why is nobody talking about this?" "This should be illegal." Make people angry at the problem.
+  * SELF-DEPRECATION: Be brutally honest about past failures, embarrassing moments, or dumb decisions. "I literally wasted 3 years doing it wrong." Vulnerability builds trust fast.
+  * NEGATIVITY BIAS: Lead with what's WRONG, what SUCKS, what's BROKEN. People engage 3x more with negative framing than positive. "The ugly truth about..." "What nobody warns you about..."
+  * CONTROVERSY: Take a strong stance. Pick a side. "Unpopular opinion but..." "I don't care if this offends people..." Wishy-washy content dies. Bold opinions get shared.
+- Every script should lean into AT LEAST ONE of these emotional triggers as the core engine of the hook and first half
+- The emotion should feel RAW and REAL, not manufactured. Write like someone venting to their best friend, not presenting to a boardroom.
 - IMPORTANT: Use the specified VIDEO STYLES. Each script should use a DIFFERENT video style from the provided list. Match the script format to the style.
 - CRITICAL: Do NOT mention the product name, brand name, or app name until the LAST 20% of the script. The first 80% should build trust, relatability, and value — talk about the problem, the journey, the emotion, the transformation. Only reveal the product/brand at the end as the solution. This makes it feel organic, not like an ad. The viewer should be hooked and emotionally invested BEFORE they hear what the product is.
 
@@ -314,7 +323,7 @@ app.post("/api/analyze", async (req, res) => {
 app.post("/api/generate", async (req, res) => {
   if (!ANTHROPIC_KEY) return res.status(500).json({ error: "ANTHROPIC_API_KEY not set" });
 
-  const { analysis, icp, count, existing } = req.body;
+  const { analysis, icp, count, existing, lengthSpecs } = req.body;
   if (!analysis || !icp) return res.status(400).json({ error: "analysis and icp required" });
 
   const scriptCount = count || 5;
@@ -322,7 +331,10 @@ app.post("/api/generate", async (req, res) => {
 
   let extraContext = "";
   if (existing && existing.length) {
-    extraContext = `\n\nIMPORTANT: The user already has ${existing.length} scripts. Generate ${scriptCount} NEW scripts that are DIFFERENT from these existing ones. Do NOT repeat similar hooks, structures, or angles. Here are the existing script titles to avoid duplicating: ${existing.map(s => s.title).join(", ")}`;
+    extraContext += `\n\nIMPORTANT: The user already has ${existing.length} scripts. Generate ${scriptCount} NEW scripts that are DIFFERENT from these existing ones. Do NOT repeat similar hooks, structures, or angles. Here are the existing script titles to avoid duplicating: ${existing.map(s => s.title).join(", ")}`;
+  }
+  if (lengthSpecs && lengthSpecs.length) {
+    extraContext += `\n\nSCRIPT LENGTHS - Generate scripts at these SPECIFIC durations:\n${lengthSpecs.join("\n")}\nMake sure each script's estimated_length matches its assigned duration. Shorter scripts (15s) should be tight and punchy. Longer scripts (60s) can have fuller story arcs.`;
   }
 
   try {
