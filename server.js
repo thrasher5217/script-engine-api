@@ -46,7 +46,7 @@ Each script must include:
 - Feel authentic UGC, NOT scripted or salesy
 - IMPORTANT: Use the specified VIDEO STYLES. Each script should use a DIFFERENT video style from the provided list. Match the script format to the style.
 
-Generate 5 unique scripts using DIFFERENT hook/structure/style combos.
+Generate the requested number of unique scripts using DIFFERENT hook/structure/style combos.
 Respond ONLY in valid JSON (no markdown, no backticks):
 {"scripts":[{"title":"...","hook_type":"...","structure":"...","video_style":"...","text_hook":"the SHORT punchy on-screen text that appears first (5-12 words, this is the scroll-stopper)","on_screen_text":[{"timestamp":"0-3s","text":"the text overlay shown","purpose":"hook/point/cta"},{"timestamp":"3-10s","text":"...","purpose":"..."},{"timestamp":"...","text":"...","purpose":"..."}],"script":"full spoken script...","direction":"visual/filming direction...","estimated_length":"..."}]}`;
 
@@ -291,18 +291,26 @@ app.post("/api/analyze", async (req, res) => {
 app.post("/api/generate", async (req, res) => {
   if (!ANTHROPIC_KEY) return res.status(500).json({ error: "ANTHROPIC_API_KEY not set" });
 
-  const { analysis, icp } = req.body;
+  const { analysis, icp, count, existing } = req.body;
   if (!analysis || !icp) return res.status(400).json({ error: "analysis and icp required" });
+
+  const scriptCount = count || 5;
+  const maxTokens = Math.min(scriptCount * 1200, 8000);
+
+  let extraContext = "";
+  if (existing && existing.length) {
+    extraContext = `\n\nIMPORTANT: The user already has ${existing.length} scripts. Generate ${scriptCount} NEW scripts that are DIFFERENT from these existing ones. Do NOT repeat similar hooks, structures, or angles. Here are the existing script titles to avoid duplicating: ${existing.map(s => s.title).join(", ")}`;
+  }
 
   try {
     const client = new Anthropic({ apiKey: ANTHROPIC_KEY });
     const msg = await client.messages.create({
       model: "claude-sonnet-4-20250514",
-      max_tokens: 4000,
+      max_tokens: maxTokens,
       system: GENERATE_PROMPT,
       messages: [{
         role: "user",
-        content: `VIRAL PATTERNS:\n${JSON.stringify(analysis)}\n\nICP:\n- App/Product: ${icp.appName || icp.product}\n- Audience: ${icp.audience}\n- Product Description: ${icp.product}\n- Pain Points: ${icp.painPoints}\n- Tone: ${icp.tone}\n- VIDEO STYLES TO USE (generate one script per style): ${Array.isArray(icp.videoStyles) ? icp.videoStyles.join(", ") : icp.videoStyle || "Talking Head, POV, Storytime"}\n\nGenerate 5 scripts. Each script MUST use a different video style from the list above. Adapt the script format to match each style.`,
+        content: `VIRAL PATTERNS:\n${JSON.stringify(analysis)}\n\nICP:\n- App/Product: ${icp.appName || icp.product}\n- Audience: ${icp.audience}\n- Product Description: ${icp.product}\n- Pain Points: ${icp.painPoints}\n- Tone: ${icp.tone}\n- VIDEO STYLES TO USE: ${Array.isArray(icp.videoStyles) ? icp.videoStyles.join(", ") : icp.videoStyle || "Talking Head, POV, Storytime"}\n\nGenerate exactly ${scriptCount} scripts. Each script MUST use a different video style from the list above. Adapt the script format to match each style.${extraContext}`,
       }],
     });
 

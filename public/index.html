@@ -688,6 +688,132 @@ a { color: #c8ff00; text-decoration: none; }
 }
 .btn-row { display: flex; gap: 10px; margin-top: 20px; }
 
+/* ── Script Count ── */
+.count-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.count-input {
+  width: 70px;
+  background: rgba(0,0,0,.3);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 7px;
+  padding: 10px 12px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #c8ff00;
+  font-family: 'IBM Plex Mono', monospace;
+  text-align: center;
+}
+.count-label {
+  font-size: 13px;
+  color: rgba(255,255,255,.4);
+}
+
+/* ── Generate More Bar ── */
+.more-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  background: rgba(255,255,255,.025);
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 10px;
+  margin-bottom: 14px;
+}
+.more-input {
+  width: 55px;
+  background: rgba(0,0,0,.3);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 6px;
+  padding: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #c8ff00;
+  font-family: 'IBM Plex Mono', monospace;
+  text-align: center;
+}
+.more-label {
+  font-size: 12px;
+  color: rgba(255,255,255,.35);
+  flex: 1;
+}
+.more-btn {
+  padding: 9px 20px;
+  background: #c8ff00;
+  color: #090909;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: 'IBM Plex Mono', monospace;
+}
+.more-btn:disabled { opacity: .5; cursor: not-allowed; }
+
+/* ── Edit Script ── */
+.edit-btn {
+  margin-top: 10px;
+  margin-left: 6px;
+  padding: 7px 14px;
+  background: rgba(255,255,255,.04);
+  color: rgba(255,255,255,.4);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 5px;
+  font-size: 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 600;
+}
+.edit-btn:hover { color: #c8ff00; border-color: rgba(200,255,0,.2); }
+.edit-textarea {
+  width: 100%;
+  min-height: 200px;
+  background: rgba(0,0,0,.3);
+  border: 1px solid rgba(200,255,0,.15);
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 13px;
+  line-height: 1.8;
+  color: rgba(255,255,255,.78);
+  font-family: 'DM Sans', sans-serif;
+  resize: vertical;
+}
+.edit-textarea:focus { outline: none; border-color: rgba(200,255,0,.3); }
+.save-edit-btn {
+  margin-top: 8px;
+  padding: 8px 18px;
+  background: #c8ff00;
+  color: #090909;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: 'IBM Plex Mono', monospace;
+}
+.cancel-edit-btn {
+  margin-top: 8px;
+  margin-left: 6px;
+  padding: 8px 18px;
+  background: transparent;
+  color: rgba(255,255,255,.35);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 6px;
+  font-size: 11px;
+  font-family: 'IBM Plex Mono', monospace;
+}
+.delete-btn {
+  margin-top: 10px;
+  margin-left: 6px;
+  padding: 7px 14px;
+  background: rgba(255,40,40,.06);
+  color: rgba(255,100,100,.5);
+  border: 1px solid rgba(255,40,40,.12);
+  border-radius: 5px;
+  font-size: 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 600;
+}
+.delete-btn:hover { color: #ff6b6b; border-color: rgba(255,40,40,.3); }
+
 /* ── Text Hook Display ── */
 .text-hook-box {
   background: linear-gradient(135deg, rgba(200,255,0,.08), rgba(200,255,0,.02));
@@ -937,6 +1063,15 @@ a { color: #c8ff00; text-decoration: none; }
         <div class="field"><label class="label">Brand Tone</label><input class="input" id="it" placeholder="Auto-filled from app analysis"></div>
       </div>
 
+      <!-- Script Count -->
+      <div class="field">
+        <label class="label">How many scripts?</label>
+        <div class="count-row">
+          <input class="count-input" id="scriptCount" type="number" min="1" max="20" value="5">
+          <span class="count-label">scripts will be generated using different styles</span>
+        </div>
+      </div>
+
       <div id="ie" class="error hidden"></div>
       <button class="primary-btn" id="gb">Generate Scripts →</button>
       <button class="sec-btn" id="bb">← Back to Search</button>
@@ -946,6 +1081,14 @@ a { color: #c8ff00; text-decoration: none; }
   <!-- STAGE 3: Generated Scripts -->
   <div id="S3" class="hidden">
     <div id="rc"></div>
+
+    <!-- Generate More -->
+    <div class="more-bar">
+      <input class="more-input" id="moreCount" type="number" min="1" max="10" value="3">
+      <span class="more-label">more scripts</span>
+      <button class="more-btn" id="moreBtn">➕ Generate More</button>
+    </div>
+
     <div class="btn-row">
       <button class="sec-btn" id="rb" style="flex:1">← Adjust ICP</button>
       <button class="sec-btn" id="sb" style="flex:1">Start Over</button>
@@ -1396,6 +1539,18 @@ $("toggleAdvanced").addEventListener("click", function() {
   }
 });
 
+// ── Build ICP object ──
+function buildICP() {
+  return {
+    appName: parsedApp ? parsedApp.appName : "",
+    audience: $("ia").value || (parsedApp ? parsedApp.audience : ""),
+    product: $("ip").value || (parsedApp ? parsedApp.product : ""),
+    painPoints: $("ix").value || (parsedApp ? parsedApp.painPoints : ""),
+    tone: $("it").value || (parsedApp ? parsedApp.tone : ""),
+    videoStyles: Array.from(selectedStyles)
+  };
+}
+
 // ── Generate Scripts ──
 async function gen() {
   if (selectedStyles.size === 0) {
@@ -1404,7 +1559,6 @@ async function gen() {
     return;
   }
 
-  // Check we have ICP data (from app parse or manual)
   var audience = $("ia").value;
   var product = $("ip").value;
   if (!audience && !product && !parsedApp) {
@@ -1413,22 +1567,16 @@ async function gen() {
     return;
   }
 
-  var icp = {
-    appName: parsedApp ? parsedApp.appName : "",
-    audience: audience || (parsedApp ? parsedApp.audience : ""),
-    product: product || (parsedApp ? parsedApp.product : ""),
-    painPoints: $("ix").value || (parsedApp ? parsedApp.painPoints : ""),
-    tone: $("it").value || (parsedApp ? parsedApp.tone : ""),
-    videoStyles: Array.from(selectedStyles)
-  };
+  var icp = buildICP();
+  var count = parseInt($("scriptCount").value) || 5;
 
   hi("ie");
   hi("S2");
   sh("S1");
   pip("scripts");
 
-  setProcessProgress(0, "Generating scripts...", "Claude is writing viral scripts...");
-  $("gt").textContent = "Writing viral scripts...";
+  setProcessProgress(0, "Generating " + count + " scripts...", "Claude is writing viral scripts...");
+  $("gt").textContent = "Writing " + count + " viral scripts...";
 
   var genTimer = setInterval(function() {
     var current = parseFloat($("processFill").style.width) || 0;
@@ -1439,13 +1587,14 @@ async function gen() {
     var r = await fetch("/api/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ analysis: A, icp: icp })
+      body: JSON.stringify({ analysis: A, icp: icp, count: count })
     });
     clearInterval(genTimer);
     if (!r.ok) throw new Error(await r.text());
     var d = await r.json();
-    setProcessProgress(100, "Scripts ready!", (d.scripts ? d.scripts.length : 0) + " scripts generated");
-    renderScripts(d);
+    window._allScripts = d.scripts || [];
+    setProcessProgress(100, "Scripts ready!", window._allScripts.length + " scripts generated");
+    renderAllScripts();
     setTimeout(function() { hi("S1"); sh("S3"); pip("scripts"); }, 800);
   } catch (e) {
     clearInterval(genTimer);
@@ -1455,22 +1604,55 @@ async function gen() {
   }
 }
 
-// ── Render Scripts ──
-function renderScripts(d) {
-  var sc = d.scripts || [];
+// ── Generate More Scripts ──
+async function genMore() {
+  var count = parseInt($("moreCount").value) || 3;
+  var icp = buildICP();
+
+  $("moreBtn").disabled = true;
+  $("moreBtn").textContent = "Generating...";
+
+  try {
+    var r = await fetch("/api/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        analysis: A,
+        icp: icp,
+        count: count,
+        existing: window._allScripts
+      })
+    });
+    if (!r.ok) throw new Error(await r.text());
+    var d = await r.json();
+    var newScripts = d.scripts || [];
+    window._allScripts = window._allScripts.concat(newScripts);
+    renderAllScripts();
+  } catch (e) {
+    alert("Failed to generate more: " + e.message);
+  }
+
+  $("moreBtn").disabled = false;
+  $("moreBtn").textContent = "\u2795 Generate More";
+}
+
+// ── Render All Scripts ──
+function renderAllScripts() {
+  var sc = window._allScripts;
   window._sc = sc;
   var html = '<div class="card"><div class="badge">\uD83C\uDFAC SCRIPTS READY</div>';
   html += '<h2 class="sec-title">' + sc.length + ' Viral Scripts</h2>';
   for (var i = 0; i < sc.length; i++) {
     var s = sc[i];
-    html += '<div class="script-block"><div class="script-head"><span class="script-num">' + (i + 1) + '</span>';
+    html += '<div class="script-block" id="sb-' + i + '">';
+    html += '<div class="script-head"><span class="script-num">' + (i + 1) + '</span>';
     html += '<div><div class="script-title">' + (s.title || "") + '</div>';
     html += '<div class="badge-row"><span class="by">' + (s.hook_type || "") + '</span>';
     html += '<span class="bb">' + (s.structure || "") + '</span>';
     if (s.video_style) html += '<span class="bv">' + s.video_style + '</span>';
     html += '<span class="bg">' + (s.estimated_length || "") + '</span></div></div></div>';
 
-    // Text Hook (scroll-stopper)
+    // Text Hook
     if (s.text_hook) {
       html += '<div class="text-hook-box">';
       html += '<div class="text-hook-label">\uD83D\uDCF1 On-Screen Text Hook (scroll stopper)</div>';
@@ -1493,15 +1675,58 @@ function renderScripts(d) {
       html += '</div>';
     }
 
-    html += '<div class="script-body">' + (s.script || "") + '</div>';
+    // Script body (editable)
+    html += '<div class="script-body" id="script-text-' + i + '">' + (s.script || "") + '</div>';
     html += '<div class="dir-box"><div class="dir-label">\uD83C\uDFAC Direction</div>';
-    html += '<div class="dir-text">' + (s.direction || "") + '</div></div>';
+    html += '<div class="dir-text" id="script-dir-' + i + '">' + (s.direction || "") + '</div></div>';
+
+    // Action buttons
     html += '<button class="copy-btn" onclick="copyScript(this,' + i + ')">Copy Script</button>';
+    html += '<button class="edit-btn" onclick="editScript(' + i + ')">\u270F\uFE0F Edit</button>';
+    html += '<button class="delete-btn" onclick="deleteScript(' + i + ')">\uD83D\uDDD1 Remove</button>';
     html += '</div>';
   }
   html += '</div>';
   $("rc").innerHTML = html;
 }
+
+// ── Edit Script ──
+window.editScript = function(i) {
+  var s = window._allScripts[i];
+  var block = $("sb-" + i);
+  var textEl = $("script-text-" + i);
+  var dirEl = $("script-dir-" + i);
+
+  // Replace script body with textarea
+  textEl.outerHTML = '<textarea class="edit-textarea" id="edit-body-' + i + '">' + (s.script || "") + '</textarea>';
+  dirEl.outerHTML = '<textarea class="edit-textarea" id="edit-dir-' + i + '" style="min-height:80px;margin-top:6px">' + (s.direction || "") + '</textarea>';
+
+  // Add save/cancel buttons
+  var actions = block.querySelector(".copy-btn").parentElement;
+  var saveHtml = '<div id="edit-actions-' + i + '" style="margin-top:8px">';
+  saveHtml += '<button class="save-edit-btn" onclick="saveEdit(' + i + ')">Save Changes</button>';
+  saveHtml += '<button class="cancel-edit-btn" onclick="cancelEdit(' + i + ')">Cancel</button>';
+  saveHtml += '</div>';
+  block.insertAdjacentHTML("beforeend", saveHtml);
+};
+
+window.saveEdit = function(i) {
+  var body = $("edit-body-" + i);
+  var dir = $("edit-dir-" + i);
+  if (body) window._allScripts[i].script = body.value;
+  if (dir) window._allScripts[i].direction = dir.value;
+  renderAllScripts();
+};
+
+window.cancelEdit = function(i) {
+  renderAllScripts();
+};
+
+// ── Delete Script ──
+window.deleteScript = function(i) {
+  window._allScripts.splice(i, 1);
+  renderAllScripts();
+};
 
 // ── Copy Script ──
 window.copyScript = function(btn, i) {
@@ -1531,11 +1756,13 @@ $("qb").addEventListener("click", search);
 $("qi").addEventListener("keydown", function(e) { if (e.key === "Enter") search(); });
 $("tb").addEventListener("click", transcribe);
 $("gb").addEventListener("click", gen);
+$("moreBtn").addEventListener("click", genMore);
 $("bb").addEventListener("click", function() { hi("S2"); sh("S0"); pip("discover"); });
 $("rb").addEventListener("click", function() { hi("S3"); sh("S2"); pip("analyze"); });
 $("sb").addEventListener("click", function() {
   hi("S3"); sh("S0"); pip("discover");
   V = []; D = []; sel.clear(); T = []; A = null; parsedApp = null;
+  window._allScripts = [];
   selectedStyles.clear(); updateStyleChips();
   $("vg").innerHTML = ""; hi("mr"); hi("ab"); hi("appInfo");
   $("ia").value = ""; $("ip").value = ""; $("ix").value = ""; $("it").value = "";
