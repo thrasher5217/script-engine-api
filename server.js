@@ -35,24 +35,22 @@ CRITICAL REQUIREMENTS:
 - Model text hooks after proven viral formats: "POV: ...", "Nobody told me...", "The [thing] that changed my [result]", "Stop scrolling if you...", "3 signs your...", "I tested [X] for [time]...", "This [product] is insane", "Wait till you see..."
 - Mirror the text hook STYLE from the reference videos provided in the analysis
 
-VISUAL HOOKS ARE CRITICAL:
-- Every script MUST open with a strong VISUAL HOOK — a specific physical action, movement, or visual that grabs attention in the first 1-2 seconds BEFORE any words are spoken
-- Examples of visual hooks: walking toward camera, slamming product on desk, quick zoom into face, hand covering/uncovering lens, dramatic before/after reveal, holding up phone screen, quick cuts between scenes, pointing at screen, turning around to camera, unboxing motion, pouring/applying product, dramatic reaction face
-- Throughout the script, include MOVEMENT and VISUAL VARIETY — never just a static talking head. Specify camera changes, prop interactions, scene transitions, gestures, and physical actions
-- The "visual_hook" field should describe the EXACT opening visual action (1-2 seconds, no dialogue)
+VISUAL HOOK (keep it simple):
+- Each script needs ONE clear opening visual action (1-2 seconds) that grabs attention before the creator starts talking
+- Examples: quick zoom into face, holding up phone, walking toward camera, dramatic reaction face
+- The "visual_hook" field should be ONE simple sentence describing this opening action
+- Do NOT overload the script with constant movement directions — creators will get confused. Keep it natural.
 
-PATTERN INTERRUPTIONS ARE ESSENTIAL FOR RETENTION:
-- Every script MUST include 2-3 PATTERN INTERRUPTS — these are sudden, small changes that reset the viewer's attention and prevent them from scrolling away
-- Types of pattern interrupts to use: sudden camera angle change (switch from front to side), jump cut to a different location or background, quick zoom in or out, change in speaking pace (fast → slow or slow → fast), a brief pause with a facial expression, holding up a prop or phone, snap/clap/sound effect moment, text overlay popping on screen, switching from talking to showing something, b-roll cutaway then back to speaker, change in lighting or color tone, whispering then speaking normally
-- Place pattern interrupts every 5-8 seconds throughout the script to maintain watch time
-- In the on_screen_text timeline, mark pattern interrupts with "⚡ PATTERN INTERRUPT:" in the visual field so the creator knows exactly when and how to break the pattern
-- The first pattern interrupt should happen around 5-8 seconds in (right after the hook lands) to lock in viewers who almost scrolled
+PATTERN INTERRUPT (just one per script):
+- Include ONE simple pattern interrupt somewhere in the middle of the script (around the halfway point)
+- This is just a small change of pace: a camera angle switch, a quick cut to showing something on screen, a pause, or a change in energy
+- Mark it in the on_screen_text timeline with "⚡" in the visual field — but ONLY for that one moment, not on every single timestamp
+- Do NOT add visual/movement cues to every timestamp. Only the opening hook and the one pattern interrupt need visual direction.
 
 Each script must include:
-- VISUAL HOOK: a specific opening visual action/movement that stops the scroll
+- VISUAL HOOK: one simple opening action
 - Open with a proven hook pattern from the references
 - TEXT OVERLAYS: specify exact on-screen text for EACH section (opening hook text, key points, CTA text)
-- MOVEMENT CUES: in the on_screen_text array, include a "visual" field describing what the viewer SEES at each timestamp
 - Follow a proven structure from the analysis
 - Match the emotional arc that drives engagement
 - Use language appropriate for the ICP
