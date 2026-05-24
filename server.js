@@ -13,8 +13,21 @@ const SUPADATA_KEY = process.env.SUPADATA_API_KEY;
 const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY;
 
 // ── PROMPTS ──
-const ANALYZE_PROMPT = `You are an expert TikTok content strategist. Analyze the following TikTok video transcripts and extract what ACTUALLY makes them work — not generic categories.
-For each transcript, identify:
+const VISION_PROMPT = `This is the cover frame of a TikTok video that likely has NO spoken audio — just music and on-screen text overlays. Your job is to read the on-screen text.
+
+Read EVERY piece of overlay/caption text that is part of the VIDEO itself, exactly as written, in top-to-bottom reading order. This text is the video's actual content — its hook and message.
+
+IGNORE the TikTok interface: the @username, the follow button, the like/comment/share/bookmark counts, the "original sound" or music/song label at the bottom, the search bar, and any app buttons or watermarks. Only transcribe text the creator added on top of the video.
+
+If there is no readable creator-added text in the image, respond with EXACTLY: NO_TEXT
+
+Otherwise respond with ONLY the text you read — no commentary, no labels, no quotation marks.`;
+
+const ANALYZE_PROMPT = `You are an expert TikTok content strategist. Analyze the following TikTok video references and extract what ACTUALLY makes them work — not generic categories.
+
+Each reference is labeled either [SPOKEN] (a transcript of someone talking) or [OVERLAY] (on-screen text read from a video that has NO voiceover — just music + text). For [OVERLAY] references, the text IS the script: analyze how the on-screen TEXT SEQUENCE builds the hook and carries the message. Do NOT describe overlay text as if someone said it out loud.
+
+For each reference, identify:
 1. HOOK - Opening line/first 3 seconds. Type: curiosity gap, bold claim, question, controversy, relatability, shock
 2. STRUCTURE - problem-agitate-solve, story arc, listicle, tutorial, rant, transformation, myth-busting
 3. EMOTIONAL ARC - emotional journey
@@ -27,7 +40,7 @@ For each transcript, identify:
 10. NARRATOR ENERGY - The creator's attitude/voice in one or two words (deadpan, manic, bitter, conspiratorial, gleeful, exhausted, unbothered, etc.).
 Then provide OVERALL PATTERN SUMMARY. In "what_makes_them_viral", focus on the SPECIFIC mechanics (how they used concrete detail, voice, and tension) — not vague advice.
 Respond ONLY in valid JSON (no markdown, no backticks):
-{"analyses":[{"transcript_number":1,"hook":{"text":"...","type":"..."},"structure":"...","emotional_arc":"...","cta":"...","pacing":"...","key_phrases":["..."],"text_hook_style":"description of on-screen text pattern used","standout_lines":["verbatim line 1","verbatim line 2"],"concrete_specifics":["specific detail 1","specific detail 2"],"narrator_energy":"..."}],"pattern_summary":{"common_hooks":"...","dominant_structure":"...","emotional_patterns":"...","what_makes_them_viral":"...","common_text_hooks":"describe the recurring on-screen text patterns across all videos","voice_and_specificity_notes":"how these creators use concrete detail and distinct voice to avoid sounding generic"}}`;
+{"analyses":[{"transcript_number":1,"hook":{"text":"...","type":"..."},"structure":"...","emotional_arc":"...","cta":"...","pacing":"...","key_phrases":["..."],"text_hook_style":"description of on-screen text pattern used","standout_lines":["verbatim line 1","verbatim line 2"],"concrete_specifics":["specific detail 1","specific detail 2"],"narrator_energy":"..."}],"pattern_summary":{"common_hooks":"...","dominant_structure":"...","emotional_patterns":"...","what_makes_them_viral":"...","common_text_hooks":"describe the recurring on-screen text patterns across all videos","voice_and_specificity_notes":"how these creators use concrete detail and distinct voice to avoid sounding generic","content_format":"one of: overlay (most/all references are music+on-screen-text with no voiceover), spoken (most/all are people talking), or mixed — based on the [OVERLAY]/[SPOKEN] labels"}}`;
 
 const GENERATE_PROMPT = `You are the writer behind TikTok accounts that blow up on the strength of the WRITING itself — not gimmicks. Your scripts get saved, sent to friends, stitched, and screenshotted. You write the way a sharp, funny, slightly unhinged real person actually talks. Your job: write scripts for the product/audience below, using the reference videos only as raw voice material (cadence, slang, energy) — never as templates to copy.
 
@@ -75,6 +88,15 @@ Lead with the human truth, the story, or the take. Bring the product in WHEN IT 
 - pattern interrupt: exactly ONE mid-script change of pace (hard cut, angle flip, sudden silence, holds up an object). Mark it with "⚡" in that SINGLE on_screen_text entry's "visual" field — nowhere else. Don't put visual cues on every timestamp.
 - on_screen_text: VERY short overlays — aim for 3-6 words, HARD MAX 7 words. They must fit on a phone screen in one or two big lines and be readable in a glance. More words than that looks like garbage on screen. If a thought is longer, split it across two consecutive overlay beats instead of cramming it into one. Punchy, sometimes funny, NEVER a word-for-word restating of the dialogue. The text_hook is the most important element: the scroll-stopper in the first 1-3 seconds.
 - video_style: each script uses a DIFFERENT style from the provided list; adapt the format to the style.
+
+═══ OVERLAY VIDEO MODE ═══
+If the request says the content format is OVERLAY (the reference videos are music + on-screen text with NO voiceover), write OVERLAY-STYLE scripts — do NOT write talking-head dialogue. In an overlay video the message is delivered entirely through TIMED ON-SCREEN TEXT beats over b-roll/music. For each overlay script:
+- The "on_screen_text" array is the heart of the script: a sequence of short text beats (still 3-6 words each, 7 max) that build the hook → story → payoff as they appear on screen.
+- The "script" field must NOT be invented spoken dialogue. Instead, write the full on-screen text sequence as a clean readable block, prefixed with "[OVERLAY VIDEO — no voiceover, trending audio]".
+- "video_style" should be "Overlay (text on screen)".
+- "direction" should describe the b-roll/visuals behind the text (what's being filmed) and suggest the vibe of trending audio to use.
+- Everything else still applies: specificity, the hook test, banned phrases, distinct angle per script.
+If the content format is SPOKEN, write normal spoken scripts. If MIXED, lean toward whichever dominates and still make any overlay script text-driven (no fake voiceover).
 
 ═══ "Good / Better / Best" STYLE (only if that style is requested) ═══
 Hook (specific, curiosity-driven, NOT a banned opener) → GOOD: a common option, fairly noted limitation, overlay "GOOD ✓" → BETTER: an upgrade, what's still missing, overlay "BETTER ✓✓" → BEST: your product as the clear winner with the specific "aha" detail, overlay "BEST ✓✓✓" (first product mention here) → quick direct close. Fast cuts, zoom on the detail, genuine reaction on the reveal. Never trash the Good/Better options — just show why Best wins.
@@ -170,6 +192,45 @@ app.get("/api/transcript", async (req, res) => {
   }
 
   res.status(500).json({ error: "Transcript services failed" });
+});
+
+// ── VISION: READ ON-SCREEN OVERLAY TEXT FROM COVER FRAME ──
+app.post("/api/vision-text", async (req, res) => {
+  if (!ANTHROPIC_KEY) return res.status(500).json({ error: "ANTHROPIC_API_KEY not set" });
+
+  const { coverUrl, desc } = req.body;
+  if (!coverUrl) return res.status(400).json({ error: "coverUrl is required" });
+
+  try {
+    // Claude vision reads images, not video — so we OCR the cover frame.
+    const imgResp = await fetch(coverUrl, {
+      headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" },
+    });
+    if (!imgResp.ok) return res.status(502).json({ error: `Could not fetch cover image (${imgResp.status})` });
+
+    let mediaType = (imgResp.headers.get("content-type") || "image/jpeg").split(";")[0].trim();
+    if (!/^image\/(jpeg|png|gif|webp)$/.test(mediaType)) mediaType = "image/jpeg";
+    const base64 = Buffer.from(await imgResp.arrayBuffer()).toString("base64");
+
+    const client = new Anthropic({ apiKey: ANTHROPIC_KEY });
+    const msg = await client.messages.create({
+      model: "claude-sonnet-4-20250514",
+      max_tokens: 600,
+      messages: [{
+        role: "user",
+        content: [
+          { type: "image", source: { type: "base64", media_type: mediaType, data: base64 } },
+          { type: "text", text: VISION_PROMPT + (desc ? `\n\nThe video's caption is: "${desc}"` : "") },
+        ],
+      }],
+    });
+
+    const text = msg.content.filter((b) => b.type === "text").map((b) => b.text).join("").trim();
+    const hasOverlayText = !!text && !/^NO_TEXT/i.test(text);
+    res.json({ text: hasOverlayText ? text : "", hasOverlayText });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // ── VIDEO INFO ──
@@ -296,7 +357,7 @@ app.post("/api/analyze", async (req, res) => {
   if (!transcripts || !transcripts.length) return res.status(400).json({ error: "transcripts array required" });
 
   const transcriptText = transcripts
-    .map((t, i) => `--- TRANSCRIPT ${i + 1} (@${t.username}, ${t.views} views) ---\n${t.transcript}`)
+    .map((t, i) => `--- [${t.type === "overlay" ? "OVERLAY" : "SPOKEN"}] REFERENCE ${i + 1} (@${t.username}, ${t.views} views) ---\n${t.transcript}`)
     .join("\n\n");
 
   try {
@@ -324,14 +385,21 @@ app.post("/api/analyze", async (req, res) => {
 app.post("/api/generate", async (req, res) => {
   if (!ANTHROPIC_KEY) return res.status(500).json({ error: "ANTHROPIC_API_KEY not set" });
 
-  const { analysis, icp, count, existing, lengthSpecs } = req.body;
+  const { analysis, icp, count, existing, lengthSpecs, contentFormat } = req.body;
   if (!analysis || !icp) return res.status(400).json({ error: "analysis and icp required" });
 
   const scriptCount = count || 5;
   const thinkingBudget = 2500;
   const maxTokens = Math.min(scriptCount * 1500, 9000) + thinkingBudget;
 
+  const format = contentFormat || (analysis.pattern_summary && analysis.pattern_summary.content_format) || "spoken";
+
   let extraContext = "";
+  if (format === "overlay") {
+    extraContext += `\n\nCONTENT FORMAT — IMPORTANT: The reference videos are OVERLAY videos (trending music + on-screen text, NO voiceover/talking). Generate MAINLY overlay-style scripts following OVERLAY VIDEO MODE: deliver the message through timed on-screen text beats over b-roll/music, NOT spoken dialogue. Set each script's video_style to "Overlay (text on screen)" and ignore the talking-head style list below.`;
+  } else if (format === "mixed") {
+    extraContext += `\n\nCONTENT FORMAT: The references are a MIX of overlay (text + music, no voiceover) and spoken videos. Generate a mix that leans toward whichever dominates. Any overlay-style script must be text-driven per OVERLAY VIDEO MODE — no fake voiceover.`;
+  }
   if (existing && existing.length) {
     extraContext += `\n\nIMPORTANT: The user already has ${existing.length} scripts. Generate ${scriptCount} NEW scripts that are DIFFERENT from these existing ones. Do NOT repeat similar hooks, structures, or angles. Here are the existing script titles to avoid duplicating: ${existing.map(s => s.title).join(", ")}`;
   }

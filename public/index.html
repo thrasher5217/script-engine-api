@@ -1566,17 +1566,40 @@ async function transcribe() {
     setProcessProgress(pct, "Transcribing videos...", "Transcribing " + (i + 1) + "/" + selected.length + ": @" + selected[i].username);
     $("gt").textContent = "Transcribing " + (i + 1) + "/" + selected.length + ": @" + selected[i].username;
 
+    var txt = "";
     try {
       var r = await fetch("/api/transcript?url=" + encodeURIComponent(selected[i].url));
       if (r.ok) {
         var d = await r.json();
-        var txt = "";
         if (typeof d.content === "string") txt = d.content;
         else if (Array.isArray(d.content)) txt = d.content.map(function(x) { return x.text || ""; }).join(" ");
         else if (d.transcript) txt = d.transcript;
-        if (txt.length > 15) T.push(Object.assign({}, selected[i], { transcript: txt }));
       }
-    } catch (e) { /* skip */ }
+    } catch (e) { /* fall through to vision */ }
+
+    if (txt.length > 15) {
+      T.push(Object.assign({}, selected[i], { transcript: txt, type: "speech" }));
+      continue;
+    }
+
+    // No usable speech transcript — likely an overlay video (music + text). Read the on-screen text with Claude vision.
+    if (selected[i].cover) {
+      setProcessProgress(pct, "Reading on-screen text...", "No speech in @" + selected[i].username + "'s video — reading overlay text");
+      $("gt").textContent = "Reading on-screen text " + (i + 1) + "/" + selected.length + ": @" + selected[i].username;
+      try {
+        var vr = await fetch("/api/vision-text", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ coverUrl: selected[i].cover, desc: selected[i].desc || "" })
+        });
+        if (vr.ok) {
+          var vd = await vr.json();
+          if (vd.hasOverlayText && vd.text && vd.text.length > 5) {
+            T.push(Object.assign({}, selected[i], { transcript: vd.text, type: "overlay" }));
+          }
+        }
+      } catch (e) { /* skip */ }
+    }
   }
 
   if (!T.length) {
@@ -1594,7 +1617,7 @@ async function transcribe() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         transcripts: T.map(function(t) {
-          return { username: t.username, views: fmt(t.views), transcript: t.transcript };
+          return { username: t.username, views: fmt(t.views), transcript: t.transcript, type: t.type || "speech" };
         })
       })
     });
@@ -1814,7 +1837,7 @@ async function gen() {
     var r = await fetch("/api/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ analysis: A, icp: icp, count: count, lengthSpecs: lengthSpecs })
+      body: JSON.stringify({ analysis: A, icp: icp, count: count, lengthSpecs: lengthSpecs, contentFormat: contentFormat() })
     });
     clearInterval(genTimer);
     if (!r.ok) throw new Error(await r.text());
@@ -1829,6 +1852,16 @@ async function gen() {
     $("ie").textContent = "Generation failed: " + e.message;
     sh("ie");
   }
+}
+
+// ── Detect overlay vs spoken from the analyzed references ──
+function contentFormat() {
+  if (!T || !T.length) return "spoken";
+  var overlay = 0, speech = 0;
+  for (var i = 0; i < T.length; i++) { if (T[i].type === "overlay") overlay++; else speech++; }
+  if (overlay === 0) return "spoken";
+  if (speech === 0) return "overlay";
+  return overlay >= speech ? "overlay" : "mixed";
 }
 
 // ── Generate More Scripts ──
@@ -1847,7 +1880,8 @@ async function genMore() {
         analysis: A,
         icp: icp,
         count: count,
-        existing: window._allScripts
+        existing: window._allScripts,
+        contentFormat: contentFormat()
       })
     });
     if (!r.ok) throw new Error(await r.text());
