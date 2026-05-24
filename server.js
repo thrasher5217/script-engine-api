@@ -326,6 +326,46 @@ app.post("/api/generate", async (req, res) => {
   }
 });
 
+// ── AI EDIT SCRIPT (Claude) ──
+app.post("/api/edit-script", async (req, res) => {
+  if (!ANTHROPIC_KEY) return res.status(500).json({ error: "ANTHROPIC_API_KEY not set" });
+
+  const { script, feedback } = req.body;
+  if (!script || !feedback) return res.status(400).json({ error: "script and feedback required" });
+
+  try {
+    const client = new Anthropic({ apiKey: ANTHROPIC_KEY });
+    const msg = await client.messages.create({
+      model: "claude-sonnet-4-20250514",
+      max_tokens: 2000,
+      messages: [{
+        role: "user",
+        content: `You are an expert TikTok UGC scriptwriter. Revise the following script based on the user's feedback. Keep the same JSON format.
+
+CURRENT SCRIPT:
+${JSON.stringify(script, null, 2)}
+
+USER FEEDBACK:
+${feedback}
+
+Revise the script according to the feedback. Keep everything the user didn't mention. Update the text_hook, on_screen_text, script, and direction as needed.
+Respond ONLY in valid JSON (no markdown, no backticks) with the FULL revised script in this exact format:
+{"title":"...","hook_type":"...","structure":"...","video_style":"...","text_hook":"...","on_screen_text":[{"timestamp":"...","text":"...","purpose":"..."}],"script":"...","direction":"...","estimated_length":"..."}`
+      }]
+    });
+
+    const text = msg.content.filter((b) => b.type === "text").map((b) => b.text).join("");
+    const jsonMatch = text.match(/\{[\s\S]*"script"[\s\S]*\}/);
+    if (jsonMatch) {
+      res.json(JSON.parse(jsonMatch[0]));
+    } else {
+      res.status(500).json({ error: "Could not parse edited script", raw: text.substring(0, 500) });
+    }
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // ── SERVE FRONTEND FOR ALL OTHER ROUTES ──
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
